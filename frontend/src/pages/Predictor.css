@@ -1,0 +1,51 @@
+.predictor-container {
+  padding-top: 2rem;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.result-card {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.result-card.risk-high {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #ef4444;
+}
+
+.result-card.risk-high h2 {
+  color: #ef4444;
+  margin-bottom: 0;
+}
+
+.result-card.risk-low {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.5);
+  color: #22c55e;
+}
+
+.result-card.risk-low h2 {
+  color: #22c55e;
+  margin-bottom: 0;
+}
+
+.probability {
+  font-size: 4rem;
+  font-weight: 800;
+  color: white;
+}
