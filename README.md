@@ -1,170 +1,199 @@
 # AI-Based Software Quality Prediction Using GitHub Evolution Metrics
 
-**SQAM Analytics Engine** is an AI-powered software quality analysis platform that predicts software defect risk by combining **static source-code metrics** with **Git/GitHub evolution metrics**.
+**SQAM Analytics Engine** is a research prototype that estimates the defect risk of Java source files by combining static source-code metrics with Git-based software evolution metrics.
 
-The project provides a machine-learning pipeline, explainability support, a FastAPI backend, and a React/Vite frontend for interactive software-quality analysis.
+The project investigates whether information about a file's development history—such as code churn, revision frequency, and contributor count—adds predictive value beyond measurements of the source code itself. It includes a reproducible machine-learning workflow, model evaluation and explainability artifacts, a FastAPI backend, and a React/Vite frontend for repository-level analysis.
 
 > **Project:** AI-Based Software Quality Prediction Using GitHub Evolution Metrics  
-> **Team:** Taufiq Ansari (23293916007) and Vikash Kumar (23293916049)
+> **Team:** Taufiq Ansari and Vikash Kumar
 
 ---
 
-## Overview
+## Project Objective
 
-Software quality can be affected by both the internal complexity of source code and the way a software component evolves over time. This project combines these two perspectives to estimate the defect risk of software components.
+Software defect risk may be associated with both the structure of source code and the way that code changes over time. This project compares models trained on:
 
-The system uses:
+1. **Static-only features** — measurements of source-code structure and complexity.
+2. **Combined features** — the same static measurements plus Git evolution metrics.
 
-- **Static code metrics** to represent source-code complexity and structure.
-- **Evolution metrics** extracted from Git history to represent how frequently and actively code changes.
-- **Machine-learning models** to classify components as lower- or higher-risk.
-- **Feature importance and SHAP** for model explainability.
-- **FastAPI** to expose prediction and repository-scanning APIs.
-- **React + Vite** for the interactive frontend.
+The experimental objective is to assess whether adding evolution metrics improves defect-proneness ranking and prediction on later, chronologically held-out JUnit 4 releases.
 
-The repository currently includes the complete project structure for data acquisition, preprocessing, model training, evaluation, explainability, API services, and frontend integration.
+**Scope:** The current feature extractor and trained dataset are Java-specific. Repository scanning currently analyzes `.java` files; Python, JavaScript, and other languages are possible future extensions, not supported capabilities of the current trained system.
+
+## Main Capabilities
+
+- Extract 12 static Java source-code metrics.
+- Mine 3 evolution metrics from Git history.
+- Train and compare Logistic Regression, Decision Tree, and Random Forest classifiers.
+- Compare static-only and static-plus-evolution feature configurations.
+- Evaluate models on chronologically held-out releases.
+- Produce evaluation metrics, ROC and precision-recall curve data, and confusion matrices.
+- Provide feature-importance and SHAP explainability artifacts.
+- Expose prediction and Java repository-scanning endpoints through FastAPI.
+- Present the analysis through a React/Vite frontend.
 
 ---
 
-## Key Features
+## Feature Set
 
-### 1. Static Code Analysis
+The model uses a fixed, ordered set of 15 features.
 
-The project works with the following static software metrics:
+### Static source-code metrics
 
-| Metric | Description |
+| Feature | Description |
 |---|---|
-| WMC | Weighted Methods per Class |
-| DIT | Depth of Inheritance Tree |
-| NOC | Number of Children |
-| CBO | Coupling Between Objects |
-| RFC | Response for a Class |
-| LCOM5 | Lack of Cohesion of Methods |
-| NPA | Number of Public Attributes |
-| NPM | Number of Public Methods |
-| NLE | Maximum nesting depth of control-flow structures |
-| CBOI | Number of other repository classes referencing this class |
-| CD | Comment lines divided by lines in the analyzed class span |
-| LOC | Lines of Code |
+| `LOC` | Lines of Code |
+| `WMC` | Weighted Methods per Class |
+| `DIT` | Depth of Inheritance Tree |
+| `NOC` | Number of Children |
+| `RFC` | Response for a Class |
+| `LCOM5` | Lack of Cohesion of Methods (LCOM5) |
+| `CBO` | Coupling Between Objects |
+| `NPA` | Number of Public Attributes |
+| `NPM` | Number of Public Methods |
+| `NLE` | Maximum nesting depth of control-flow structures |
+| `CBOI` | Number of other repository classes referencing the class |
+| `CD` | Comment lines divided by lines in the analyzed class span |
 
-### 2. Git Evolution Analysis
+### Git evolution metrics
 
-Git history is mined with native Git history commands, following file renames and limiting historical datasets to their matching release commit, to calculate:
+| Feature | Description |
+|---|---|
+| `code_churn` | Added lines plus deleted lines |
+| `revision_count` | Number of commits affecting the file |
+| `developer_count` | Number of distinct developers who modified the file |
 
-- **Code Churn** — added lines + deleted lines.
-- **Revision Count** — number of commits affecting a file.
-- **Developer Count** — number of unique developers who modified a file.
+The **static-only** configuration uses the 12 static features. The **combined** configuration uses all 15 features. The feature order is defined by the shared feature schema in `src/data/feature_extractor.py`; training, evaluation, prediction, and repository scanning must preserve that order.
 
-### 3. Machine Learning
+---
 
-Three classifiers are implemented:
+## Machine-Learning Experiments
+
+Three classifiers are compared:
 
 - Logistic Regression
 - Decision Tree
 - Random Forest
 
-Models are trained using two feature configurations:
+Each classifier is trained in two configurations: static-only and combined. Random Forest hyperparameters are selected using GridSearchCV with release-aware, expanding-window validation on the training releases.
 
-1. **Static-only features**
-2. **Static + evolution features**
+### Dataset and chronological evaluation
 
-Random Forest uses GridSearchCV over `n_estimators`, `max_depth`, and `min_samples_split`, scored by ROC-AUC with expanding-window folds that hold out complete training releases.
+The experiments use JUnit 4 releases from the **Software Metrics for Software Defects Prediction** dataset. Static metrics are regenerated from the corresponding historical Java source snapshots, and Git evolution metrics are mined only up to the matching release commit. This avoids using future repository history when constructing historical features.
 
-### 4. Model Evaluation
+One source record could not be mapped to a file in its corresponding historical commit and was excluded; the retained records keep their original defect labels.
 
-The evaluation pipeline calculates:
+| Partition | Releases | Rows |
+|---|---|---:|
+| Training | JUnit 4.8, 4.9, 4.11 | 2,251 |
+| Held-out test | JUnit 4.12, 4.13.1 | 2,572 |
 
-- Accuracy
-- Precision
-- Recall
-- F1-score
-- Balanced accuracy
-- ROC-AUC
-- PR-AUC
-- Confusion Matrix
-- ROC Curve
-- Precision-Recall Curve
+The held-out test set contains **25 defective** and **2,547 non-defective** records. The positive class is therefore highly underrepresented. In addition, the positive examples are concentrated in one of the held-out releases, while the other held-out release contains no positive examples. Metrics must be interpreted with this class imbalance and release composition in mind.
 
-### 5. Explainable AI
+### Reported held-out results
 
-The project supports:
+Average Precision (AP) is especially relevant for this imbalanced classification task. The table below reports the final evaluation results for AP and ROC-AUC.
 
-- Random Forest feature importance
-- SHAP-based explanations
+| Classifier | Feature configuration | Average Precision | ROC-AUC |
+|---|---|---:|---:|
+| Logistic Regression | Static-only | 0.02027 | 0.68918 |
+| Logistic Regression | Combined | **0.02758** | **0.78898** |
+| Decision Tree | Static-only | 0.00972 | 0.46368 |
+| Decision Tree | Combined | 0.01144 | 0.51590 |
+| Random Forest | Static-only | 0.01036 | 0.55311 |
+| Random Forest | Combined | 0.01600 | 0.65349 |
 
-SHAP explanations are generated using a sample of the test data.
+The majority-class/prevalence baseline has an Average Precision of approximately **0.00972**. Adding evolution features improves AP for all three classifiers in this experiment. Logistic Regression with combined features has the strongest AP and ROC-AUC among the six evaluated configurations.
 
-### 6. Repository Scanning
+These results show a relative improvement from adding evolution features, but the absolute AP and precision values remain low. The system should therefore be treated as a **research and triage aid**, not as a definitive defect detector or a replacement for testing, code review, or engineering judgement.
 
-The FastAPI backend provides a `/scan-repo` endpoint that can clone a Git repository, analyze Java files, mine Git history, and return file-level risk predictions.
-
-The response includes information such as:
-
-- File path
-- Lines of code
-- Code churn
-- Revision count
-- Risk probability
-- Risk level
-
-### 7. Interactive Prediction API
-
-The `/predict` endpoint accepts the project's static and evolution metrics and returns a defect-risk prediction and probability.
+The evaluation pipeline also records accuracy, balanced accuracy, precision, recall, F1-score, confusion matrices, ROC curve coordinates, precision-recall curve coordinates, and per-release results in `data/results/evaluation_metrics.json`.
 
 ---
 
-## Project Architecture
+## Explainability
 
-```text
-AI-Based-Software-Quality-Prediction-Using-Github-Evolution-Metrics/
-│
-├── api/
-│   └── main.py                     # FastAPI application
-│
-├── app/                            # Application/dashboard components
-│
-├── data/
-│   ├── raw/                        # Downloaded/raw dataset
-│   ├── processed/                  # Processed train/test data and scaler
-│   └── results/                    # Evaluation and explainability results
-│
-├── frontend/                       # React + Vite frontend
-│   ├── src/
-│   ├── package.json
-│   └── ...
-│
-├── src/
-│   ├── data/
-│   │   ├── data_acquisition.py     # Dataset download
-│   │   ├── preprocessing.py        # Data preprocessing
-│   │   └── git_miner.py            # Git evolution metrics
-│   │
-│   └── models/
-│       ├── train.py                # Model training
-│       ├── evaluate.py             # Model evaluation
-│       ├── explain.py              # Explainability
-│       └── saved/                  # Trained models
-│
-├── requirements.txt
-└── README.md
+The project includes:
+
+- Random Forest feature-importance output.
+- SHAP values and a corresponding sample of feature rows.
+
+**Artifact/model alignment:** The currently saved feature-importance and SHAP artifacts explain the **Random Forest combined** model. They should not be presented as explanations of the Logistic Regression model. If explanations are required for the Logistic Regression model used by the scanner, generate a new explanation artifact specifically for that model.
+
+---
+
+## Repository Scanning and Prediction
+
+The FastAPI application provides endpoints for metric-based prediction and Java repository scanning.
+
+### Repository scanning
+
+The `/scan-repo` endpoint accepts a Git repository URL, clones the repository, identifies Java source files, extracts the shared feature set, and returns file-level defect-risk scores.
+
+The scanning workflow is intended to:
+
+1. Clone the supplied Git repository.
+2. Identify `.java` source files.
+3. Build repository context and extract the 12 static metrics.
+4. Mine Git history for `code_churn`, `revision_count`, and `developer_count`.
+5. Arrange the extracted values in the exact 15-feature schema.
+6. Apply the currently configured combined Logistic Regression model.
+7. Return file-level risk probabilities and risk labels, with higher-risk files prioritized in the response.
+
+The current scanner is Java-only because the feature extractor and training data are Java-specific. Risk scores are estimates from the trained model and should be used to help prioritize manual review, not interpreted as confirmed defects.
+
+### Prediction endpoint
+
+The `/predict` endpoint accepts the model's required static and evolution metrics and returns a prediction and probability. The current API uses a probability threshold of `0.5` to map the score to its `HIGH` or `LOW` risk label. This is the configured application threshold; it is not a threshold optimized on the held-out test set.
+
+Example request body:
+
+```json
+{
+  "LOC": 150,
+  "WMC": 10,
+  "DIT": 2,
+  "NOC": 1,
+  "RFC": 20,
+  "LCOM5": 0.4,
+  "CBO": 8,
+  "NPA": 1,
+  "NPM": 5,
+  "NLE": 1,
+  "CBOI": 2,
+  "CD": 0.2,
+  "code_churn": 80,
+  "revision_count": 10,
+  "developer_count": 3
+}
 ```
+
+Example response shape:
+
+```json
+{
+  "prediction": 0,
+  "probability": 0.32,
+  "risk_level": "LOW"
+}
+```
+
+The values above are illustrative request/response examples, not measured results.
 
 ---
 
 ## Technology Stack
 
-### Backend / Machine Learning
+### Backend and machine learning
 
 - Python
-- Pandas
-- NumPy
-- Scikit-learn
-- Lizard
+- Pandas and NumPy
+- scikit-learn
+- Lizard / Java source analysis
 - SHAP
 - Joblib
-- FastAPI
-- Uvicorn
-- GitPython
+- FastAPI and Uvicorn
+- Git-based history mining
 
 ### Frontend
 
@@ -177,46 +206,72 @@ AI-Based-Software-Quality-Prediction-Using-Github-Evolution-Metrics/
 
 ---
 
-## Dataset
+## Project Structure
 
-The project uses the JUnit 4 releases from the **Software Metrics for Software Defects Prediction** dataset. Static features are regenerated from each release's exact Git commit with the same Java analyzer used by repository scanning. Evolution features are mined only through that release commit. One source row has a path that does not exist in its corresponding commit; it is recorded in `data/derived/junit4_regenerated/unmapped_records.json` and excluded, while all retained labels are preserved.
-
-The target variable used by the training pipeline is:
+The following is the intended high-level structure. Exact folders and generated artifacts may vary by branch and local setup.
 
 ```text
-isDefective
+AI-Based-Software-Quality-Prediction-Using-Github-Evolution-Metrics/
+│
+├── api/
+│   └── main.py
+│
+├── data/
+│   ├── raw/
+│   ├── processed/
+│   ├── derived/
+│   └── results/
+│
+├── frontend/
+│   ├── src/
+│   ├── package.json
+│   └── ...
+│
+├── src/
+│   ├── data/
+│   │   ├── data_acquisition.py
+│   │   ├── preprocessing.py
+│   │   ├── feature_extractor.py
+│   │   └── git_miner.py
+│   │
+│   └── models/
+│       ├── train.py
+│       ├── evaluate.py
+│       ├── explain.py
+│       └── saved/
+│
+├── requirements.txt
+└── README.md
 ```
-
-The chronological holdout uses JUnit 4.8, 4.9, and 4.11 for training (2,251 rows) and JUnit 4.12 and 4.13.1 for testing (2,572 rows). Imputation medians and `StandardScaler` are fitted only on training releases. Model tuning uses earlier training releases to predict later complete releases; held-out test releases are not used in training or tuning.
 
 ---
 
 ## Installation
 
-### 1. Clone the Repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/Taufiq1729/AI-Based-Software-Quality-Prediction-Using-Github-Evolution-Metrics.git
 cd AI-Based-Software-Quality-Prediction-Using-Github-Evolution-Metrics
 ```
 
-### 2. Create a Virtual Environment
+### 2. Create and activate a virtual environment
 
-#### Windows
+**Windows**
 
 ```bash
 python -m venv venv
 venv\Scripts\activate
 ```
 
-#### Linux / macOS
+**Linux / macOS**
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 3. Install Python Dependencies
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -224,173 +279,120 @@ pip install -r requirements.txt
 
 ---
 
-## Data and Model Pipeline
+## Reproducing the Data and Model Pipeline
 
-Run the following commands from the **repository root**.
+Run commands from the repository root. Use the scripts and paths present in the checked-out branch; filenames can differ if the project structure has changed.
 
-### Step 1 — Download the Dataset
+### Step 1 — Acquire the dataset
 
 ```bash
 python src/data/data_acquisition.py
 ```
 
-This downloads and extracts the dataset into `data/raw/`.
+This downloads and extracts the source dataset into the raw-data directory, subject to the script's configuration and dataset availability.
 
-### Step 2 — Regenerate Release Features
+### Step 2 — Rebuild historical features
 
 ```bash
 python src/data/rebuild_static_metrics.py
 ```
 
-This checks out each dataset commit, builds whole-repository Java context, and writes regenerated static and rename-aware evolution metrics to `data/derived/junit4_regenerated/`.
+This regenerates Java static metrics from historical release snapshots and mines evolution metrics from the corresponding Git history.
 
-### Step 3 — Preprocess the Data
+### Step 3 — Preprocess and create chronological partitions
 
 ```bash
 python src/data/preprocessing.py
 ```
 
-This creates processed training/testing files in:
+The training and evaluation workflow uses separate feature and label files:
 
 ```text
 data/processed/
 ├── X_train.csv
 ├── X_test.csv
 ├── y_train.csv
-├── y_test.csv
-└── scaler.pkl
+└── y_test.csv
 ```
 
-### Step 4 — Train the Models
+The exact files generated depend on the preprocessing script. The current `train.py` and `evaluate.py` workflows consume these feature and label CSVs. They pass the resulting feature matrices directly to the models; do not add an external scaler or imputer at evaluation time unless the training and evaluation implementation is deliberately changed to use one consistently.
+
+### Step 4 — Train models
 
 ```bash
 python src/models/train.py
 ```
 
-The trained models are stored in:
+The six trained model files are stored under `src/models/saved/`:
 
 ```text
-src/models/saved/
+LogisticRegression_static.pkl
+LogisticRegression_combined.pkl
+DecisionTree_static.pkl
+DecisionTree_combined.pkl
+RandomForest_static.pkl
+RandomForest_combined.pkl
 ```
 
-The pipeline creates static-only and combined versions of the supported classifiers.
-
-### Step 5 — Evaluate the Models
+### Step 5 — Evaluate models
 
 ```bash
 python src/models/evaluate.py
 ```
 
-Evaluation results are written to:
+The evaluation results are written to:
 
 ```text
 data/results/evaluation_metrics.json
 ```
 
-### Step 6 — Generate Explainability Results
+### Step 6 — Generate explainability artifacts
 
 ```bash
 python src/models/explain.py
 ```
 
-This generates feature-importance and SHAP-related outputs in `data/results/`.
+This generates feature-importance and SHAP-related outputs under `data/results/`. Confirm which model each artifact explains before using it in a report or visualization.
 
 ---
 
 ## Running the FastAPI Backend
 
-After preprocessing and model training, start the API with:
+After the required model artifacts are available, start the API from the repository root:
 
 ```bash
 uvicorn api.main:app --reload
 ```
 
-The API will normally be available at:
+The local API is normally available at:
 
 ```text
 http://127.0.0.1:8000
 ```
 
-Interactive API documentation is available through FastAPI's generated documentation pages.
+FastAPI's interactive API documentation is normally available at:
 
-### API Endpoints
+```text
+http://127.0.0.1:8000/docs
+```
+
+### API endpoints
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| GET | `/` | API welcome message |
-| GET | `/evaluation` | Retrieve evaluation metrics |
-| GET | `/feature-importance` | Retrieve feature-importance data |
-| POST | `/predict` | Predict defect risk from supplied metrics |
-| POST | `/scan-repo` | Scan a Git repository and predict file-level risk |
+| `GET` | `/` | API welcome/status |
+| `GET` | `/evaluation` | Retrieve evaluation metrics |
+| `GET` | `/feature-importance` | Retrieve feature-importance data |
+| `POST` | `/predict` | Predict risk from supplied metrics |
+| `POST` | `/scan-repo` | Scan a Git repository and return Java file-level risk estimates |
 
----
-
-## `/predict` Example
-
-Send all required static and evolution metrics as JSON:
-
-```json
-{
-  "WMC": 10,
-  "DIT": 2,
-  "NOC": 1,
-  "CBO": 8,
-  "RFC": 20,
-  "LCOM5": 0.4,
-  "NPA": 1,
-  "NPM": 5,
-  "NLE": 1,
-  "CBOI": 2,
-  "CD": 0.2,
-  "LOC": 150,
-  "code_churn": 80,
-  "revision_count": 10,
-  "developer_count": 3
-}
-```
-
-The API returns a result containing:
-
-```json
-{
-  "prediction": 0,
-  "probability": 0.32,
-  "risk_level": "LOW"
-}
-```
-
-The current API uses a probability threshold of `0.5` to classify the result as `HIGH` or `LOW` risk.
-
----
-
-## Repository Scanning
-
-The `/scan-repo` endpoint accepts a Git repository URL:
-
-```json
-{
-  "url": "https://github.com/example/repository.git"
-}
-```
-
-The backend:
-
-1. Clones the repository.
-2. Identifies Java source files.
-3. Builds whole-repository class context and extracts the shared 12 static metrics.
-4. Mines rename-aware Git history for the three evolution metrics.
-5. Applies training medians, the saved scaler, and the Random Forest model.
-6. Returns the highest-risk files.
-
-The endpoint returns up to **50 files**, sorted by predicted risk probability.
+Check `api/main.py` in the current branch for the definitive request schema and endpoint behavior.
 
 ---
 
 ## Running the Frontend
 
-The frontend is a React application built with Vite.
-
-Open a second terminal:
+Open another terminal:
 
 ```bash
 cd frontend
@@ -398,15 +400,15 @@ npm install
 npm run dev
 ```
 
-Vite will display the local development URL in the terminal, normally:
+Vite prints the local development URL, normally:
 
 ```text
 http://localhost:5173
 ```
 
-Make sure the FastAPI backend is running at the same time if the frontend is configured to communicate with the local API.
+The FastAPI backend must also be running if the frontend is configured to call the local API.
 
-### Production Build
+### Production build
 
 ```bash
 npm run build
@@ -420,146 +422,55 @@ npm run preview
 
 ---
 
-## Reproducibility Notes
+## Reproducibility and Interpretation Notes
 
-`src/data/feature_extractor.py` defines the shared 15-feature order and extraction path used by training data generation and `/scan-repo`. The API applies the medians and scaler produced by preprocessing. Tests check exact feature parity for the same historical repository snapshot, release-level train/test separation, rename tracking, and exclusion of future Git commits.
-
-The held-out set contains 25 positive labels among 2,572 rows (0.97%); the 2020 release has no positive labels. Interpret precision, recall, F1, balanced accuracy, ROC-AUC, and PR-AUC alongside this class imbalance. The default API classification threshold remains 0.5.
+- `src/data/feature_extractor.py` defines the shared 15-feature schema. Preserve its exact feature names and order across extraction, training, evaluation, and scanning.
+- Historical feature generation must use the matching release snapshot and must not include commits made after that snapshot.
+- The held-out test set is highly imbalanced: 25 positive labels out of 2,572 records.
+- One held-out release has no positive examples, so per-release metrics for that release cannot demonstrate positive-class detection.
+- Average Precision and precision-recall analysis are important alongside ROC-AUC for this class distribution.
+- The configured API risk threshold of `0.5` is not a threshold selected using the held-out test labels.
+- The current scanner's Java-only scope reflects the language coverage of the extractor and training data.
+- The scanner's risk score is a prioritization signal, not proof that a file contains a defect.
 
 ---
 
 ## Research Questions
 
-The project is designed around the following research questions:
+**RQ1.** Does combining Git evolution metrics—code churn, revision count, and developer count—with static source-code metrics improve defect-risk prediction compared with static metrics alone?
 
-### RQ1
-Does combining evolution/process metrics such as code churn, revision count, and developer count with static code metrics improve defect-proneness prediction compared with using static metrics alone?
+**RQ2.** Which static and evolution metrics contribute most to defect-risk prediction?
 
-### RQ2
-Which static and evolution metrics contribute most to defect-risk prediction?
+**RQ3.** How do Logistic Regression, Decision Tree, and Random Forest compare across the static-only and combined feature configurations?
 
-### RQ3
-How do Logistic Regression, Decision Tree, and Random Forest compare when predicting software defect risk using the selected feature sets?
-
-### RQ4
-Can feature importance and SHAP explanations identify meaningful and actionable software-quality indicators?
+**RQ4.** Can feature-importance and SHAP explanations provide useful insight into the model's predictions?
 
 ---
 
-## Expected Workflow
+## Future Work
 
-```text
-                ┌─────────────────────┐
-                │   Dataset / GitHub  │
-                │     Repository      │
-                └──────────┬──────────┘
-                           │
-             ┌─────────────┴─────────────┐
-             │                           │
-             ▼                           ▼
-    ┌──────────────────┐       ┌──────────────────┐
-    │ Static Metrics   │       │ Git Evolution    │
-    │ LOC, WMC, CK...  │       │ Churn, Revisions│
-    └────────┬─────────┘       │ Developers      │
-             │                 └────────┬─────────┘
-             └────────────┬────────────┘
-                          ▼
-                ┌─────────────────────┐
-                │ Data Preprocessing  │
-                │ Split + Scaling     │
-                └──────────┬──────────┘
-                           ▼
-                ┌─────────────────────┐
-                │ Machine Learning    │
-                │ LR / DT / RF        │
-                └──────────┬──────────┘
-                           ▼
-              ┌────────────┴────────────┐
-              │                         │
-              ▼                         ▼
-    ┌──────────────────┐       ┌──────────────────┐
-    │ Model Evaluation │       │ Explainability   │
-    │ Metrics + Curves │       │ Importance + SHAP│
-    └────────┬─────────┘       └────────┬─────────┘
-             └────────────┬────────────┘
-                          ▼
-                ┌─────────────────────┐
-                │ FastAPI + Frontend  │
-                │ Risk Prediction     │
-                └─────────────────────┘
-```
-
----
-
-## Output Files
-
-After running the pipeline, the main generated artifacts include:
-
-```text
-data/
-├── processed/
-│   ├── X_train.csv
-│   ├── X_test.csv
-│   ├── y_train.csv
-│   ├── y_test.csv
-│   └── scaler.pkl
-│
-└── results/
-    ├── evaluation_metrics.json
-    ├── feature_importance.csv
-    └── SHAP-related output files
-
-src/models/saved/
-├── LogisticRegression_static.pkl
-├── LogisticRegression_combined.pkl
-├── DecisionTree_static.pkl
-├── DecisionTree_combined.pkl
-├── RandomForest_static.pkl
-└── RandomForest_combined.pkl
-```
-
----
-
-## Applications
-
-The system can be used as a prototype for:
-
-- Identifying potentially defect-prone software components.
-- Supporting software quality assurance activities.
-- Prioritizing files for code review or testing.
-- Studying the relationship between code complexity and software evolution.
-- Exploring explainable machine-learning approaches for software-quality prediction.
-
----
-
-## Future Improvements
-
-Potential extensions include:
-
-- Evaluate additional releases and projects with release-specific holdouts and adequate positive labels.
-- Improve class-level mapping for Java files that contain multiple top-level or nested classes.
-- Resolve inheritance and coupling against external classpaths where those dependencies are available.
-- Calibrate the decision threshold using training-period validation data.
-- Expand repository-language support beyond Java.
-- Add richer SHAP visualizations and explanation reports.
-- Integrate automated CI/CD quality checks.
-- Add authentication and deployment configuration for production use.
+- Extend the training dataset and evaluation to additional Java projects and releases.
+- Improve class-level mapping for Java files containing multiple top-level or nested classes.
+- Improve resolution of inheritance and coupling relationships involving external classpaths.
+- Investigate training-period threshold selection and probability calibration.
+- Extend feature extraction and build suitable labelled datasets for Python, JavaScript, and other programming languages.
+- Generate model-specific explanations for the classifier deployed by the scanner.
+- Improve the robustness of defect prediction under severe class imbalance and release-to-release distribution changes.
+- Explore CI/CD integration as a quality-assurance aid.
 
 ---
 
 ## Authors
 
-**Taufiq Ansari**  
-Enrollment No.: 23293916007
+**Taufiq Ansari**
 
-**Vikash Kumar**  
-Enrollment No.: 23293916049
+**Vikash Kumar**
 
 ---
 
 ## License
 
-No explicit license is currently specified in the repository. If this project is intended for public reuse, add an appropriate `LICENSE` file to the repository.
+No explicit license is specified here. Add a `LICENSE` file if the project is intended for public reuse.
 
 ---
 
