@@ -1,0 +1,12 @@
+[
+  {
+    "release": "88c28a42a6fb7dc462c4bc504189a76a815fc265",
+    "row_index": 0,
+    "ID": "L119",
+    "Name": "JunitDependencyTest",
+    "LongName": "JunitDependencyTest",
+    "Path": "C:\\Users\\domco\\Desktop\\DP\\repos\\junit4\\build\\maven\\sample_project_template\\src\\test\\java\\JunitDependencyTest.java",
+    "isDefective": 0,
+    "reason": "Source file 'src/test/java/JunitDependencyTest.java' does not exist in commit '88c28a42a6fb7dc462c4bc504189a76a815fc265'."
+  }
+]

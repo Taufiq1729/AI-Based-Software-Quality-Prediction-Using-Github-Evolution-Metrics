@@ -1,0 +1,168 @@
+{
+  "saved_metrics_match_recalculation": true,
+  "saved_comparisons": [
+    {
+      "model": "LogisticRegression",
+      "feature_set": "static",
+      "metric_deltas": {
+        "Accuracy": 0.0,
+        "Balanced_Accuracy": 0.0,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "F1_Score": 0.0,
+        "ROC_AUC": 0.0,
+        "PR_AUC": 0.0,
+        "Average_Precision": 0.0,
+        "PR_AUC_trapezoidal": 0.0
+      },
+      "confusion_matrix_matches": true
+    },
+    {
+      "model": "LogisticRegression",
+      "feature_set": "combined",
+      "metric_deltas": {
+        "Accuracy": 0.0,
+        "Balanced_Accuracy": 0.0,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "F1_Score": 0.0,
+        "ROC_AUC": 0.0,
+        "PR_AUC": 0.0,
+        "Average_Precision": 0.0,
+        "PR_AUC_trapezoidal": 0.0
+      },
+      "confusion_matrix_matches": true
+    },
+    {
+      "model": "DecisionTree",
+      "feature_set": "static",
+      "metric_deltas": {
+        "Accuracy": 0.0,
+        "Balanced_Accuracy": 0.0,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "F1_Score": 0.0,
+        "ROC_AUC": 0.0,
+        "PR_AUC": 0.0,
+        "Average_Precision": 0.0,
+        "PR_AUC_trapezoidal": 0.0
+      },
+      "confusion_matrix_matches": true
+    },
+    {
+      "model": "DecisionTree",
+      "feature_set": "combined",
+      "metric_deltas": {
+        "Accuracy": 0.0,
+        "Balanced_Accuracy": 0.0,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "F1_Score": 0.0,
+        "ROC_AUC": 0.0,
+        "PR_AUC": 0.0,
+        "Average_Precision": 0.0,
+        "PR_AUC_trapezoidal": 0.0
+      },
+      "confusion_matrix_matches": true
+    },
+    {
+      "model": "RandomForest",
+      "feature_set": "static",
+      "metric_deltas": {
+        "Accuracy": 0.0,
+        "Balanced_Accuracy": 0.0,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "F1_Score": 0.0,
+        "ROC_AUC": 0.0,
+        "PR_AUC": 0.0,
+        "Average_Precision": 0.0,
+        "PR_AUC_trapezoidal": 0.0
+      },
+      "confusion_matrix_matches": true
+    },
+    {
+      "model": "RandomForest",
+      "feature_set": "combined",
+      "metric_deltas": {
+        "Accuracy": 0.0,
+        "Balanced_Accuracy": 0.0,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "F1_Score": 0.0,
+        "ROC_AUC": 0.0,
+        "PR_AUC": 0.0,
+        "Average_Precision": 0.0,
+        "PR_AUC_trapezoidal": 0.0
+      },
+      "confusion_matrix_matches": true
+    }
+  ],
+  "majority_class_baseline": {
+    "model": "MajorityClassBaseline",
+    "feature_set": "none",
+    "Accuracy": 0.9902799377916018,
+    "Balanced_Accuracy": 0.5,
+    "Precision": 0.0,
+    "Recall": 0.0,
+    "F1_Score": 0.0,
+    "ROC_AUC": 0.5,
+    "PR_AUC": 0.009720062208398134,
+    "PR_AUC_trapezoidal": 0.5048600311041991,
+    "Average_Precision": 0.009720062208398134,
+    "TN": 2547,
+    "FP": 0,
+    "FN": 25,
+    "TP": 0,
+    "predicted_positive": 0,
+    "positive_probability_min": 0.0,
+    "positive_probability_max": 0.0,
+    "saved_metrics_match": null,
+    "max_saved_metric_absolute_delta": null,
+    "confusion_matrix_matches": null,
+    "threshold_used_for_predict": 0.5
+  },
+  "test_rows": 2572,
+  "test_label_distribution": {
+    "0": 2547,
+    "1": 25
+  },
+  "threshold_selection_implemented": false,
+  "decision_threshold": 0.5,
+  "saved_PR_AUC_definition": "PR_AUC is sklearn average_precision_score. PR_AUC_trapezoidal is separately reported as auc(recall, precision) over sklearn precision_recall_curve points.",
+  "explainability_outputs_reproducible": true,
+  "explainability_hashes_before": {
+    "feature_importance.csv": "ffca615f2905f9895fcd6cf20e3ce0a19a2134a20257711f1ebd3763afbd626c",
+    "shap_values.npy": "a8c0727d20f721f2c253d781e38f636fbd813ce22745dcae77ff4312c0faf25d",
+    "shap_base_values.npy": "9fdd565161a89ab2c44c2b5688e11d6d3dc0b1663fe6ed531523eb112cfa54c7",
+    "shap_X_sample.csv": "304ce14dc295620cb32f7499acd9c3c7e9e97c3d14106bc933393c61bf0b6ec5"
+  },
+  "explainability_hashes_after": {
+    "feature_importance.csv": "ffca615f2905f9895fcd6cf20e3ce0a19a2134a20257711f1ebd3763afbd626c",
+    "shap_values.npy": "a8c0727d20f721f2c253d781e38f636fbd813ce22745dcae77ff4312c0faf25d",
+    "shap_base_values.npy": "9fdd565161a89ab2c44c2b5688e11d6d3dc0b1663fe6ed531523eb112cfa54c7",
+    "shap_X_sample.csv": "304ce14dc295620cb32f7499acd9c3c7e9e97c3d14106bc933393c61bf0b6ec5"
+  },
+  "saved_scaler_feature_count": 15,
+  "saved_scaler_feature_names": [
+    "LOC",
+    "WMC",
+    "DIT",
+    "NOC",
+    "RFC",
+    "LCOM5",
+    "CBO",
+    "NPA",
+    "NPM",
+    "NLE",
+    "CBOI",
+    "CD",
+    "code_churn",
+    "revision_count",
+    "developer_count"
+  ],
+  "imputer_feature_names_match": true,
+  "saved_preprocessing_max_absolute_difference_from_test_matrix": 3.552713678800501e-15,
+  "model_paths_loadable": true,
+  "evaluation_source_uses_model_predict_default_threshold": true
+}

@@ -1,0 +1,2110 @@
+{
+  "captured_at": "2026-10-30",
+  "api_base": "http://127.0.0.1:8000",
+  "frontend_url": "http://127.0.0.1:5173/scanner",
+  "frontend_live_submissions": {
+    "http-request": "successful; matching request/response captured below",
+    "java-design-patterns": "successful; matching request/response captured below"
+  },
+  "cases": {
+    "ordinary_public_repo": {
+      "request": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/scan-repo",
+        "json": {
+          "url": "https://github.com/kevinsawicki/http-request.git"
+        }
+      },
+      "status": 200,
+      "response": {
+        "repository": "https://github.com/kevinsawicki/http-request.git",
+        "repository_commit": "2d62a3e9da726942a93cf16b6e91c0187e6c0136",
+        "java_files_discovered": 4,
+        "total_java_files_analyzed": 4,
+        "classes_discovered": 13,
+        "files_scored": 4,
+        "classes_scored": 4,
+        "unidentified_class_file_count": 0,
+        "unidentified_class_files": [],
+        "class_declarations_not_individually_scored": 9,
+        "non_primary_classes_not_scored": 9,
+        "non_primary_class_reason": "The scanner predicts one primary top-level class per Java file; additional and nested declarations are not individually scored.",
+        "context_parse_failures": [],
+        "analysis_failures": [],
+        "unresolved_project_references": 137,
+        "files": [
+          {
+            "file": "lib/src/test/java/com/github/kevinsawicki/http/HttpRequestTest.java",
+            "class_name": "HttpRequestTest",
+            "class_identity": "com.github.kevinsawicki.http.HttpRequestTest",
+            "loc": 3606,
+            "churn": 9329,
+            "revisions": 98,
+            "risk_probability": 0.09790932320582285,
+            "risk_level": "LOW",
+            "metrics": {
+              "LOC": 3606.0,
+              "WMC": 163.0,
+              "DIT": 1.0,
+              "NOC": 0.0,
+              "RFC": 309.0,
+              "LCOM5": 0.1697530864197531,
+              "CBO": 25.0,
+              "NPA": 0.0,
+              "NPM": 163.0,
+              "NLE": 2.0,
+              "CBOI": 0.0,
+              "CD": 0.22046589018302828,
+              "code_churn": 9329.0,
+              "revision_count": 98.0,
+              "developer_count": 7.0
+            }
+          },
+          {
+            "file": "lib/src/main/java/com/github/kevinsawicki/http/HttpRequest.java",
+            "class_name": "HttpRequest",
+            "class_identity": "com.github.kevinsawicki.http.HttpRequest",
+            "loc": 3162,
+            "churn": 11553,
+            "revisions": 226,
+            "risk_probability": 0.08,
+            "risk_level": "LOW",
+            "metrics": {
+              "LOC": 3162.0,
+              "WMC": 189.0,
+              "DIT": 0.0,
+              "NOC": 0.0,
+              "RFC": 200.0,
+              "LCOM5": 0.9900779588944011,
+              "CBO": 47.0,
+              "NPA": 30.0,
+              "NPM": 145.0,
+              "NLE": 9.0,
+              "CBOI": 1.0,
+              "CD": 0.4803921568627451,
+              "code_churn": 11553.0,
+              "revision_count": 226.0,
+              "developer_count": 12.0
+            }
+          },
+          {
+            "file": "lib/src/test/java/com/github/kevinsawicki/http/ServerTestCase.java",
+            "class_name": "ServerTestCase",
+            "class_identity": "com.github.kevinsawicki.http.ServerTestCase",
+            "loc": 160,
+            "churn": 452,
+            "revisions": 9,
+            "risk_probability": 0.0507156948672454,
+            "risk_level": "LOW",
+            "metrics": {
+              "LOC": 160.0,
+              "WMC": 3.0,
+              "DIT": 0.0,
+              "NOC": 1.0,
+              "RFC": 25.0,
+              "LCOM5": 1.0833333333333333,
+              "CBO": 11.0,
+              "NPA": 0.0,
+              "NPM": 3.0,
+              "NLE": 1.0,
+              "CBOI": 1.0,
+              "CD": 0.24375,
+              "code_churn": 452.0,
+              "revision_count": 9.0,
+              "developer_count": 2.0
+            }
+          },
+          {
+            "file": "lib/src/test/java/com/github/kevinsawicki/http/EncodeTest.java",
+            "class_name": "EncodeTest",
+            "class_identity": "com.github.kevinsawicki.http.EncodeTest",
+            "loc": 74,
+            "churn": 200,
+            "revisions": 3,
+            "risk_probability": 0.04113818071850561,
+            "risk_level": "LOW",
+            "metrics": {
+              "LOC": 74.0,
+              "WMC": 2.0,
+              "DIT": 0.0,
+              "NOC": 0.0,
+              "RFC": 3.0,
+              "LCOM5": 0.0,
+              "CBO": 0.0,
+              "NPA": 0.0,
+              "NPM": 2.0,
+              "NLE": 0.0,
+              "CBOI": 0.0,
+              "CD": 0.08108108108108109,
+              "code_churn": 200.0,
+              "revision_count": 3.0,
+              "developer_count": 1.0
+            }
+          }
+        ]
+      }
+    },
+    "multi_package_inheritance_public_repo": {
+      "request": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/scan-repo",
+        "json": {
+          "url": "https://github.com/iluwatar/java-design-patterns.git"
+        }
+      },
+      "status": 200,
+      "repository_commit": "4cabb204f240240bea319605a5ffa46ded728001",
+      "response_metadata": {
+        "java_files_discovered": 2042,
+        "files_scored": 2042,
+        "classes_discovered": 2080,
+        "classes_scored": 1881,
+        "unidentified_class_file_count": 161,
+        "non_primary_classes_not_scored": 38,
+        "context_parse_failures": [
+          {
+            "path": "abstract-factory/src/main/java/com/iluwatar/abstractfactory/Kingdom.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "backends-for-frontends/src/main/java/com/iluwatar/bff/dto/DesktopDashboardResponse.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "backends-for-frontends/src/main/java/com/iluwatar/bff/dto/MobileDashboardResponse.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "backends-for-frontends/src/main/java/com/iluwatar/bff/model/CartItem.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "backends-for-frontends/src/main/java/com/iluwatar/bff/model/Order.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "backends-for-frontends/src/main/java/com/iluwatar/bff/model/Product.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "backends-for-frontends/src/main/java/com/iluwatar/bff/model/SupplierRecord.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "backends-for-frontends/src/main/java/com/iluwatar/bff/model/User.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "bloc/src/main/java/com/iluwatar/bloc/State.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "builder/src/main/java/com/iluwatar/builder/Hero.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "bytecode/src/main/java/com/iluwatar/bytecode/VirtualMachine.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "circuit-breaker/src/main/java/com/iluwatar/circuitbreaker/DefaultCircuitBreaker.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "collection-pipeline/src/main/java/com/iluwatar/collectionpipeline/Car.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "collection-pipeline/src/main/java/com/iluwatar/collectionpipeline/Person.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "combinator/src/main/java/com/iluwatar/combinator/CombinatorApp.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "combinator/src/test/java/com/iluwatar/combinator/FinderTest.java",
+            "error": "LexerError: Illegal escape character at \"s\", line 36: var example = \"\"\""
+          },
+          {
+            "path": "combinator/src/test/java/com/iluwatar/combinator/FindersTest.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "commander/src/main/java/com/iluwatar/commander/Commander.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "commander/src/main/java/com/iluwatar/commander/RetryParams.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "commander/src/main/java/com/iluwatar/commander/TimeLimits.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "component/src/main/java/com/iluwatar/component/component/inputcomponent/PlayerInputComponent.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "composite-view/src/main/java/com/iluwatar/compositeview/AppServlet.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "composite-view/src/test/java/com/iluwatar/compositeview/AppServletTest.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "converter/src/main/java/com/iluwatar/converter/User.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "converter/src/main/java/com/iluwatar/converter/UserDto.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "dao-factory/src/main/java/com/iluwatar/daofactory/App.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "dao-factory/src/main/java/com/iluwatar/daofactory/DAOFactoryProvider.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "data-transfer-object/src/main/java/com/iluwatar/datatransfer/customer/CustomerDto.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "data-transfer-object/src/main/java/com/iluwatar/datatransfer/customer/CustomerResource.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "data-transfer-object/src/main/java/com/iluwatar/datatransfer/product/ProductResource.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "dynamic-proxy/src/main/java/com/iluwatar/dynamicproxy/tinyrestclient/TinyRestClient.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "event-based-asynchronous/src/main/java/com/iluwatar/event/asynchronous/App.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "event-driven-architecture/src/main/java/com/iluwatar/eda/model/User.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "event-sourcing/src/main/java/com/iluwatar/event/sourcing/processor/JsonFileJournal.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "extension-objects/src/main/java/concreteextensions/Commander.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "extension-objects/src/main/java/concreteextensions/Sergeant.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "extension-objects/src/main/java/concreteextensions/Soldier.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "facade/src/main/java/com/iluwatar/facade/DwarvenMineWorker.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "factory-method/src/main/java/com/iluwatar/factory/method/ElfWeapon.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "factory-method/src/main/java/com/iluwatar/factory/method/OrcWeapon.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "flyweight/src/main/java/com/iluwatar/flyweight/PotionFactory.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "health-check/src/main/java/com/iluwatar/health/check/CpuHealthIndicator.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "hexagonal-architecture/src/main/java/com/iluwatar/hexagonal/domain/LotteryTicket.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "hexagonal-architecture/src/main/java/com/iluwatar/hexagonal/domain/PlayerDetails.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "interpreter/src/main/java/com/iluwatar/interpreter/App.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "leader-election/src/main/java/com/iluwatar/leaderelection/AbstractInstance.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "memento/src/main/java/com/iluwatar/memento/Star.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "metadata-mapping/src/main/java/com/iluwatar/metamapping/utils/DatabaseUtil.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "microservices-bulkhead/src/main/java/com/iluwatar/bulkhead/Bulkhead.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "microservices-idempotent-consumer/src/main/java/com/iluwatar/idempotentconsumer/RequestStateMachine.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "microservices-load-shedding/src/main/java/com/iluwatar/loadshedding/Request.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "microservices-load-shedding/src/main/java/com/iluwatar/loadshedding/Response.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "model-view-intent/src/main/java/com/iluwatar/model/view/intent/CalculatorViewModel.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "monad/src/main/java/com/iluwatar/monad/User.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "monolithic-architecture/src/main/java/com/iluwatar/monolithic/EcommerceApp.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "monolithic-architecture/src/test/java/com/iluwatar/monolithic/MonolithicAppTest.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "monostate/src/main/java/com/iluwatar/monostate/Request.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "null-object/src/main/java/com/iluwatar/nullobject/NodeImpl.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "onion-architecture/application/src/main/java/com/iluwatar/onion/application/dto/PersonResponse.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "onion-architecture/application/src/main/java/com/iluwatar/onion/application/dto/SavePersonCommand.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "partial-response/src/main/java/com/iluwatar/partialresponse/Video.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "partial-response/src/main/java/com/iluwatar/partialresponse/VideoResource.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "private-class-data/src/main/java/com/iluwatar/privateclassdata/StewData.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "producer-consumer/src/main/java/com/iluwatar/producer/consumer/Item.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "property/src/test/java/com/iluwatar/property/CharacterTest.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "publish-subscribe/src/main/java/com/iluwatar/publish/subscribe/model/Message.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "publish-subscribe/src/main/java/com/iluwatar/publish/subscribe/subscriber/CustomerSupportSubscriber.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "publish-subscribe/src/main/java/com/iluwatar/publish/subscribe/subscriber/DelayedWeatherSubscriber.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "publish-subscribe/src/main/java/com/iluwatar/publish/subscribe/subscriber/WeatherSubscriber.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "rate-limiting-pattern/src/main/java/com/iluwatar/rate/limiting/pattern/App.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "reactor/src/main/java/com/iluwatar/reactor/app/LoggingHandler.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "registry/src/main/java/com/iluwatar/registry/Customer.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "retry/src/main/java/com/iluwatar/retry/FindCustomer.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "rule-engine/src/main/java/com/iluwatar/ruleengine/LoanApplication.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "rule-engine/src/main/java/com/iluwatar/ruleengine/RuleEngineResult.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "separated-interface/src/main/java/com/iluwatar/separatedinterface/invoice/InvoiceGenerator.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "service-stub/src/main/java/com/iluwatar/servicestub/RealSentimentAnalysisServer.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "service-to-worker/src/main/java/com/iluwatar/servicetoworker/Command.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "session-facade/src/main/java/com/iluwatar/sessionfacade/Product.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "sharding/src/main/java/com/iluwatar/sharding/RangeShardManager.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "view-helper/src/main/java/com/iluwatar/viewhelper/Product.java",
+            "error": "JavaSyntaxError: "
+          },
+          {
+            "path": "view-helper/src/main/java/com/iluwatar/viewhelper/ProductViewModel.java",
+            "error": "JavaSyntaxError: "
+          }
+        ],
+        "analysis_failures": [],
+        "unresolved_project_references": 4631
+      },
+      "returned_top_files": [
+        {
+          "file": "promise/src/main/java/com/iluwatar/promise/Promise.java",
+          "class_name": "Promise",
+          "class_identity": "com.iluwatar.promise.Promise",
+          "loc": 159,
+          "churn": 590,
+          "revisions": 18,
+          "risk_probability": 0.5511145647970821,
+          "risk_level": "HIGH",
+          "metrics": {
+            "LOC": 159.0,
+            "WMC": 9.0,
+            "DIT": 1.0,
+            "NOC": 0.0,
+            "RFC": 15.0,
+            "LCOM5": 0.8125,
+            "CBO": 9.0,
+            "NPA": 0.0,
+            "NPM": 7.0,
+            "NLE": 1.0,
+            "CBOI": 4.0,
+            "CD": 0.31446540880503143,
+            "code_churn": 590.0,
+            "revision_count": 18.0,
+            "developer_count": 7.0
+          }
+        },
+        {
+          "file": "hexagonal-architecture/src/test/java/com/iluwatar/hexagonal/banking/InMemoryBankTest.java",
+          "class_name": "InMemoryBankTest",
+          "class_identity": "com.iluwatar.hexagonal.banking.InMemoryBankTest",
+          "loc": 16,
+          "churn": 122,
+          "revisions": 15,
+          "risk_probability": 0.5365372207708146,
+          "risk_level": "HIGH",
+          "metrics": {
+            "LOC": 16.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 6.0,
+            "LCOM5": 0.0,
+            "CBO": 2.0,
+            "NPA": 0.0,
+            "NPM": 0.0,
+            "NLE": 0.0,
+            "CBOI": 0.0,
+            "CD": 0.0,
+            "code_churn": 122.0,
+            "revision_count": 15.0,
+            "developer_count": 8.0
+          }
+        },
+        {
+          "file": "repository/src/main/java/com/iluwatar/repository/Person.java",
+          "class_name": "Person",
+          "class_identity": "com.iluwatar.repository.Person",
+          "loc": 14,
+          "churn": 430,
+          "revisions": 20,
+          "risk_probability": 0.5151925540329247,
+          "risk_level": "HIGH",
+          "metrics": {
+            "LOC": 14.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 1.0,
+            "LCOM5": 0.0,
+            "CBO": 0.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 0.0,
+            "CBOI": 7.0,
+            "CD": 0.07142857142857142,
+            "code_churn": 430.0,
+            "revision_count": 20.0,
+            "developer_count": 12.0
+          }
+        },
+        {
+          "file": "layered-architecture/src/main/java/service/CakeBakingService.java",
+          "class_name": "CakeBakingService",
+          "class_identity": "service.CakeBakingService",
+          "loc": 26,
+          "churn": 382,
+          "revisions": 21,
+          "risk_probability": 0.5117641321223475,
+          "risk_level": "HIGH",
+          "metrics": {
+            "LOC": 26.0,
+            "WMC": 9.0,
+            "DIT": 0.0,
+            "NOC": 1.0,
+            "RFC": 9.0,
+            "LCOM5": 0.0,
+            "CBO": 5.0,
+            "NPA": 0.0,
+            "NPM": 0.0,
+            "NLE": 0.0,
+            "CBOI": 4.0,
+            "CD": 0.23076923076923078,
+            "code_churn": 382.0,
+            "revision_count": 21.0,
+            "developer_count": 8.0
+          }
+        },
+        {
+          "file": "delegation/src/main/java/com/iluwatar/delegation/simple/App.java",
+          "class_name": "App",
+          "class_identity": "com.iluwatar.delegation.simple.App",
+          "loc": 19,
+          "churn": 205,
+          "revisions": 21,
+          "risk_probability": 0.5002696565513723,
+          "risk_level": "HIGH",
+          "metrics": {
+            "LOC": 19.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 6.0,
+            "LCOM5": 0.0,
+            "CBO": 4.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 0.0,
+            "CBOI": 0.0,
+            "CD": 0.2631578947368421,
+            "code_churn": 205.0,
+            "revision_count": 21.0,
+            "developer_count": 7.0
+          }
+        },
+        {
+          "file": "data-bus/src/main/java/com/iluwatar/databus/App.java",
+          "class_name": "App",
+          "class_identity": "com.iluwatar.databus.App",
+          "loc": 18,
+          "churn": 387,
+          "revisions": 26,
+          "risk_probability": 0.47791980885326674,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 18.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 9.0,
+            "LCOM5": 0.0,
+            "CBO": 2.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 0.0,
+            "CBOI": 0.0,
+            "CD": 0.0,
+            "code_churn": 387.0,
+            "revision_count": 26.0,
+            "developer_count": 11.0
+          }
+        },
+        {
+          "file": "specification/src/main/java/com/iluwatar/specification/selector/SizeSelector.java",
+          "class_name": "SizeSelector",
+          "class_identity": "com.iluwatar.specification.selector.SizeSelector",
+          "loc": 13,
+          "churn": 105,
+          "revisions": 14,
+          "risk_probability": 0.46899008787857355,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 13.0,
+            "WMC": 2.0,
+            "DIT": 1.0,
+            "NOC": 0.0,
+            "RFC": 4.0,
+            "LCOM5": 0.0,
+            "CBO": 3.0,
+            "NPA": 0.0,
+            "NPM": 2.0,
+            "NLE": 0.0,
+            "CBOI": 1.0,
+            "CD": 0.0,
+            "code_churn": 105.0,
+            "revision_count": 14.0,
+            "developer_count": 8.0
+          }
+        },
+        {
+          "file": "dirty-flag/src/test/java/org/dirty/flag/DirtyFlagTest.java",
+          "class_name": "DirtyFlagTest",
+          "class_identity": "org.dirty.flag.DirtyFlagTest",
+          "loc": 17,
+          "churn": 306,
+          "revisions": 24,
+          "risk_probability": 0.4666554080033977,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 17.0,
+            "WMC": 2.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 7.0,
+            "LCOM5": 0.0,
+            "CBO": 1.0,
+            "NPA": 0.0,
+            "NPM": 0.0,
+            "NLE": 0.0,
+            "CBOI": 0.0,
+            "CD": 0.0,
+            "code_churn": 306.0,
+            "revision_count": 24.0,
+            "developer_count": 12.0
+          }
+        },
+        {
+          "file": "hexagonal-architecture/src/main/java/com/iluwatar/hexagonal/domain/LotteryConstants.java",
+          "class_name": "LotteryConstants",
+          "class_identity": "com.iluwatar.hexagonal.domain.LotteryConstants",
+          "loc": 10,
+          "churn": 179,
+          "revisions": 22,
+          "risk_probability": 0.46584223844033235,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 10.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 1.0,
+            "LCOM5": 0.0,
+            "CBO": 0.0,
+            "NPA": 5.0,
+            "NPM": 0.0,
+            "NLE": 0.0,
+            "CBOI": 0.0,
+            "CD": 0.0,
+            "code_churn": 179.0,
+            "revision_count": 22.0,
+            "developer_count": 11.0
+          }
+        },
+        {
+          "file": "virtual-proxy/src/test/java/com/iluwatar/virtual/proxy/RealVideoObjectTest.java",
+          "class_name": "RealVideoObjectTest",
+          "class_identity": "com.iluwatar.virtual.proxy.RealVideoObjectTest",
+          "loc": 19,
+          "churn": 170,
+          "revisions": 25,
+          "risk_probability": 0.4556569641346946,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 19.0,
+            "WMC": 3.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 7.0,
+            "LCOM5": 0.0,
+            "CBO": 1.0,
+            "NPA": 0.0,
+            "NPM": 2.0,
+            "NLE": 0.0,
+            "CBOI": 0.0,
+            "CD": 0.0,
+            "code_churn": 170.0,
+            "revision_count": 25.0,
+            "developer_count": 15.0
+          }
+        },
+        {
+          "file": "hexagonal-architecture/src/test/java/com/iluwatar/hexagonal/test/LotteryTestUtils.java",
+          "class_name": "LotteryTestUtils",
+          "class_identity": "com.iluwatar.hexagonal.test.LotteryTestUtils",
+          "loc": 19,
+          "churn": 110,
+          "revisions": 16,
+          "risk_probability": 0.45192862343290413,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 19.0,
+            "WMC": 2.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 6.0,
+            "LCOM5": 0.0,
+            "CBO": 4.0,
+            "NPA": 0.0,
+            "NPM": 2.0,
+            "NLE": 0.0,
+            "CBOI": 0.0,
+            "CD": 0.3157894736842105,
+            "code_churn": 110.0,
+            "revision_count": 16.0,
+            "developer_count": 6.0
+          }
+        },
+        {
+          "file": "private-class-data/src/main/java/com/iluwatar/privateclassdata/App.java",
+          "class_name": "App",
+          "class_identity": "com.iluwatar.privateclassdata.App",
+          "loc": 19,
+          "churn": 223,
+          "revisions": 15,
+          "risk_probability": 0.45004969574929715,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 19.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 5.0,
+            "LCOM5": 0.0,
+            "CBO": 2.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 0.0,
+            "CBOI": 0.0,
+            "CD": 0.3684210526315789,
+            "code_churn": 223.0,
+            "revision_count": 15.0,
+            "developer_count": 8.0
+          }
+        },
+        {
+          "file": "hexagonal-architecture/src/main/java/com/iluwatar/hexagonal/eventlog/MongoEventLog.java",
+          "class_name": "MongoEventLog",
+          "class_identity": "com.iluwatar.hexagonal.eventlog.MongoEventLog",
+          "loc": 99,
+          "churn": 361,
+          "revisions": 14,
+          "risk_probability": 0.44950568410334646,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 99.0,
+            "WMC": 9.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 20.0,
+            "LCOM5": 0.8472222222222222,
+            "CBO": 7.0,
+            "NPA": 1.0,
+            "NPM": 9.0,
+            "NLE": 1.0,
+            "CBOI": 2.0,
+            "CD": 0.04040404040404041,
+            "code_churn": 361.0,
+            "revision_count": 14.0,
+            "developer_count": 7.0
+          }
+        },
+        {
+          "file": "sharding/src/main/java/com/iluwatar/sharding/Data.java",
+          "class_name": "Data",
+          "class_identity": "com.iluwatar.sharding.Data",
+          "loc": 32,
+          "churn": 366,
+          "revisions": 28,
+          "risk_probability": 0.4484118631291372,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 32.0,
+            "WMC": 2.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 2.0,
+            "LCOM5": 0.0,
+            "CBO": 1.0,
+            "NPA": 0.0,
+            "NPM": 2.0,
+            "NLE": 0.0,
+            "CBOI": 10.0,
+            "CD": 0.21875,
+            "code_churn": 366.0,
+            "revision_count": 28.0,
+            "developer_count": 14.0
+          }
+        },
+        {
+          "file": "commander/src/main/java/com/iluwatar/commander/employeehandle/EmployeeHandle.java",
+          "class_name": "EmployeeHandle",
+          "class_identity": "com.iluwatar.commander.employeehandle.EmployeeHandle",
+          "loc": 19,
+          "churn": 377,
+          "revisions": 26,
+          "risk_probability": 0.44617897477656926,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 19.0,
+            "WMC": 3.0,
+            "DIT": 1.0,
+            "NOC": 0.0,
+            "RFC": 5.0,
+            "LCOM5": 0.0,
+            "CBO": 4.0,
+            "NPA": 0.0,
+            "NPM": 2.0,
+            "NLE": 1.0,
+            "CBOI": 2.0,
+            "CD": 0.0,
+            "code_churn": 377.0,
+            "revision_count": 26.0,
+            "developer_count": 12.0
+          }
+        },
+        {
+          "file": "flux/src/main/java/com/iluwatar/flux/store/ContentStore.java",
+          "class_name": "ContentStore",
+          "class_identity": "com.iluwatar.flux.store.ContentStore",
+          "loc": 13,
+          "churn": 128,
+          "revisions": 16,
+          "risk_probability": 0.4461707527843792,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 13.0,
+            "WMC": 1.0,
+            "DIT": 1.0,
+            "NOC": 0.0,
+            "RFC": 5.0,
+            "LCOM5": 0.0,
+            "CBO": 3.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 1.0,
+            "CBOI": 4.0,
+            "CD": 0.0,
+            "code_churn": 128.0,
+            "revision_count": 16.0,
+            "developer_count": 8.0
+          }
+        },
+        {
+          "file": "flux/src/main/java/com/iluwatar/flux/store/MenuStore.java",
+          "class_name": "MenuStore",
+          "class_identity": "com.iluwatar.flux.store.MenuStore",
+          "loc": 13,
+          "churn": 130,
+          "revisions": 16,
+          "risk_probability": 0.4461707527843792,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 13.0,
+            "WMC": 1.0,
+            "DIT": 1.0,
+            "NOC": 0.0,
+            "RFC": 5.0,
+            "LCOM5": 0.0,
+            "CBO": 3.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 1.0,
+            "CBOI": 4.0,
+            "CD": 0.0,
+            "code_churn": 130.0,
+            "revision_count": 16.0,
+            "developer_count": 8.0
+          }
+        },
+        {
+          "file": "singleton/src/main/java/com/iluwatar/singleton/ThreadSafeLazyLoadedIvoryTower.java",
+          "class_name": "ThreadSafeLazyLoadedIvoryTower",
+          "class_identity": "com.iluwatar.singleton.ThreadSafeLazyLoadedIvoryTower",
+          "loc": 28,
+          "churn": 278,
+          "revisions": 28,
+          "risk_probability": 0.44606714269950565,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 28.0,
+            "WMC": 2.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 3.0,
+            "LCOM5": 0.0,
+            "CBO": 1.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 1.0,
+            "CBOI": 1.0,
+            "CD": 0.39285714285714285,
+            "code_churn": 278.0,
+            "revision_count": 28.0,
+            "developer_count": 18.0
+          }
+        },
+        {
+          "file": "hexagonal-architecture/src/main/java/com/iluwatar/hexagonal/domain/LotteryUtils.java",
+          "class_name": "LotteryUtils",
+          "class_identity": "com.iluwatar.hexagonal.domain.LotteryUtils",
+          "loc": 19,
+          "churn": 125,
+          "revisions": 14,
+          "risk_probability": 0.4428037990428807,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 19.0,
+            "WMC": 2.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 8.0,
+            "LCOM5": 0.0,
+            "CBO": 4.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 2.0,
+            "CBOI": 0.0,
+            "CD": 0.05263157894736842,
+            "code_churn": 125.0,
+            "revision_count": 14.0,
+            "developer_count": 6.0
+          }
+        },
+        {
+          "file": "model-view-controller/src/main/java/com/iluwatar/model/view/controller/App.java",
+          "class_name": "App",
+          "class_identity": "com.iluwatar.model.view.controller.App",
+          "loc": 22,
+          "churn": 175,
+          "revisions": 15,
+          "risk_probability": 0.43298771856401624,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 22.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 8.0,
+            "LCOM5": 0.0,
+            "CBO": 3.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 0.0,
+            "CBOI": 0.0,
+            "CD": 0.4090909090909091,
+            "code_churn": 175.0,
+            "revision_count": 15.0,
+            "developer_count": 8.0
+          }
+        },
+        {
+          "file": "feature-toggle/src/main/java/com/iluwatar/featuretoggle/user/User.java",
+          "class_name": "User",
+          "class_identity": "com.iluwatar.featuretoggle.user.User",
+          "loc": 15,
+          "churn": 96,
+          "revisions": 14,
+          "risk_probability": 0.42781278843637444,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 15.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 1.0,
+            "LCOM5": 0.0,
+            "CBO": 0.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 0.0,
+            "CBOI": 8.0,
+            "CD": 0.4,
+            "code_churn": 96.0,
+            "revision_count": 14.0,
+            "developer_count": 7.0
+          }
+        },
+        {
+          "file": "page-object/src/main/java/com/iluwatar/pageobject/App.java",
+          "class_name": "App",
+          "class_identity": "com.iluwatar.pageobject.App#duplicate:page-object/src/main/java/com/iluwatar/pageobject/App.java:52",
+          "loc": 56,
+          "churn": 221,
+          "revisions": 14,
+          "risk_probability": 0.42685271765344474,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 56.0,
+            "WMC": 2.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 17.0,
+            "LCOM5": 0.0,
+            "CBO": 2.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 4.0,
+            "CBOI": 0.0,
+            "CD": 0.26785714285714285,
+            "code_churn": 221.0,
+            "revision_count": 14.0,
+            "developer_count": 7.0
+          }
+        },
+        {
+          "file": "converter/src/main/java/com/iluwatar/converter/UserConverter.java",
+          "class_name": "UserConverter",
+          "class_identity": "com.iluwatar.converter.UserConverter",
+          "loc": 14,
+          "churn": 132,
+          "revisions": 14,
+          "risk_probability": 0.4238137325389445,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 14.0,
+            "WMC": 3.0,
+            "DIT": 1.0,
+            "NOC": 0.0,
+            "RFC": 10.0,
+            "LCOM5": 0.0,
+            "CBO": 3.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 0.0,
+            "CBOI": 2.0,
+            "CD": 0.0,
+            "code_churn": 132.0,
+            "revision_count": 14.0,
+            "developer_count": 7.0
+          }
+        },
+        {
+          "file": "microservices-aggregrator/information-microservice/src/main/java/com/iluwatar/information/microservice/InformationController.java",
+          "class_name": "InformationController",
+          "class_identity": "com.iluwatar.information.microservice.InformationController",
+          "loc": 12,
+          "churn": 103,
+          "revisions": 14,
+          "risk_probability": 0.42142790152281134,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 12.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 1.0,
+            "LCOM5": 0.0,
+            "CBO": 0.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 0.0,
+            "CBOI": 1.0,
+            "CD": 0.4166666666666667,
+            "code_churn": 103.0,
+            "revision_count": 14.0,
+            "developer_count": 10.0
+          }
+        },
+        {
+          "file": "type-object/src/main/java/com/iluwatar/typeobject/Candy.java",
+          "class_name": "Candy",
+          "class_identity": "com.iluwatar.typeobject.Candy",
+          "loc": 22,
+          "churn": 255,
+          "revisions": 20,
+          "risk_probability": 0.4208870176555811,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 22.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 1.0,
+            "LCOM5": 0.0,
+            "CBO": 1.0,
+            "NPA": 0.0,
+            "NPM": 0.0,
+            "NLE": 0.0,
+            "CBOI": 5.0,
+            "CD": 0.0,
+            "code_churn": 255.0,
+            "revision_count": 20.0,
+            "developer_count": 14.0
+          }
+        },
+        {
+          "file": "specification/src/main/java/com/iluwatar/specification/selector/ColorSelector.java",
+          "class_name": "ColorSelector",
+          "class_identity": "com.iluwatar.specification.selector.ColorSelector",
+          "loc": 13,
+          "churn": 105,
+          "revisions": 14,
+          "risk_probability": 0.4189131480097699,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 13.0,
+            "WMC": 2.0,
+            "DIT": 1.0,
+            "NOC": 0.0,
+            "RFC": 4.0,
+            "LCOM5": 0.0,
+            "CBO": 3.0,
+            "NPA": 0.0,
+            "NPM": 2.0,
+            "NLE": 0.0,
+            "CBOI": 2.0,
+            "CD": 0.0,
+            "code_churn": 105.0,
+            "revision_count": 14.0,
+            "developer_count": 8.0
+          }
+        },
+        {
+          "file": "specification/src/main/java/com/iluwatar/specification/selector/MovementSelector.java",
+          "class_name": "MovementSelector",
+          "class_identity": "com.iluwatar.specification.selector.MovementSelector",
+          "loc": 13,
+          "churn": 105,
+          "revisions": 14,
+          "risk_probability": 0.4189131480097699,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 13.0,
+            "WMC": 2.0,
+            "DIT": 1.0,
+            "NOC": 0.0,
+            "RFC": 4.0,
+            "LCOM5": 0.0,
+            "CBO": 3.0,
+            "NPA": 0.0,
+            "NPM": 2.0,
+            "NLE": 0.0,
+            "CBOI": 3.0,
+            "CD": 0.0,
+            "code_churn": 105.0,
+            "revision_count": 14.0,
+            "developer_count": 8.0
+          }
+        },
+        {
+          "file": "intercepting-filter/src/main/java/com/iluwatar/intercepting/filter/Target.java",
+          "class_name": "Target",
+          "class_identity": "com.iluwatar.intercepting.filter.Target",
+          "loc": 55,
+          "churn": 357,
+          "revisions": 23,
+          "risk_probability": 0.4175304185395682,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 55.0,
+            "WMC": 3.0,
+            "DIT": 1.0,
+            "NOC": 0.0,
+            "RFC": 22.0,
+            "LCOM5": 0.875,
+            "CBO": 9.0,
+            "NPA": 0.0,
+            "NPM": 2.0,
+            "NLE": 0.0,
+            "CBOI": 2.0,
+            "CD": 0.01818181818181818,
+            "code_churn": 357.0,
+            "revision_count": 23.0,
+            "developer_count": 12.0
+          }
+        },
+        {
+          "file": "intercepting-filter/src/main/java/com/iluwatar/intercepting/filter/FilterChain.java",
+          "class_name": "FilterChain",
+          "class_identity": "com.iluwatar.intercepting.filter.FilterChain",
+          "loc": 22,
+          "churn": 309,
+          "revisions": 21,
+          "risk_probability": 0.41408246574924823,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 22.0,
+            "WMC": 2.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 4.0,
+            "LCOM5": 0.0,
+            "CBO": 2.0,
+            "NPA": 0.0,
+            "NPM": 2.0,
+            "NLE": 1.0,
+            "CBOI": 1.0,
+            "CD": 0.09090909090909091,
+            "code_churn": 309.0,
+            "revision_count": 21.0,
+            "developer_count": 10.0
+          }
+        },
+        {
+          "file": "lockable-object/src/test/java/com/iluwatar/lockableobject/SubCreaturesTests.java",
+          "class_name": "SubCreaturesTests",
+          "class_identity": "com.iluwatar.lockableobject.SubCreaturesTests",
+          "loc": 15,
+          "churn": 54,
+          "revisions": 4,
+          "risk_probability": 0.41252271917251543,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 15.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 8.0,
+            "LCOM5": 0.0,
+            "CBO": 3.0,
+            "NPA": 0.0,
+            "NPM": 0.0,
+            "NLE": 0.0,
+            "CBOI": 0.0,
+            "CD": 0.0,
+            "code_churn": 54.0,
+            "revision_count": 4.0,
+            "developer_count": 3.0
+          }
+        },
+        {
+          "file": "dao-factory/src/main/java/com/iluwatar/daofactory/MongoDataSourceFactory.java",
+          "class_name": "MongoDataSourceFactory",
+          "class_identity": "com.iluwatar.daofactory.MongoDataSourceFactory",
+          "loc": 17,
+          "churn": 261,
+          "revisions": 21,
+          "risk_probability": 0.4121028762605194,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 17.0,
+            "WMC": 1.0,
+            "DIT": 1.0,
+            "NOC": 0.0,
+            "RFC": 6.0,
+            "LCOM5": 0.0,
+            "CBO": 4.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 1.0,
+            "CBOI": 0.0,
+            "CD": 0.0,
+            "code_churn": 261.0,
+            "revision_count": 21.0,
+            "developer_count": 10.0
+          }
+        },
+        {
+          "file": "command-query-responsibility-segregation/src/main/java/com/iluwatar/cqrs/commandes/CommandServiceImpl.java",
+          "class_name": "CommandServiceImpl",
+          "class_identity": "com.iluwatar.cqrs.commandes.CommandServiceImpl",
+          "loc": 108,
+          "churn": 315,
+          "revisions": 16,
+          "risk_probability": 0.41169628121332424,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 108.0,
+            "WMC": 9.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 28.0,
+            "LCOM5": 1.125,
+            "CBO": 5.0,
+            "NPA": 0.0,
+            "NPM": 7.0,
+            "NLE": 1.0,
+            "CBOI": 2.0,
+            "CD": 0.0,
+            "code_churn": 315.0,
+            "revision_count": 16.0,
+            "developer_count": 7.0
+          }
+        },
+        {
+          "file": "hexagonal-architecture/src/main/java/com/iluwatar/hexagonal/eventlog/StdOutEventLog.java",
+          "class_name": "StdOutEventLog",
+          "class_identity": "com.iluwatar.hexagonal.eventlog.StdOutEventLog",
+          "loc": 42,
+          "churn": 297,
+          "revisions": 29,
+          "risk_probability": 0.4108485417016544,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 42.0,
+            "WMC": 5.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 9.0,
+            "LCOM5": 0.0,
+            "CBO": 2.0,
+            "NPA": 0.0,
+            "NPM": 5.0,
+            "NLE": 0.0,
+            "CBOI": 2.0,
+            "CD": 0.0,
+            "code_churn": 297.0,
+            "revision_count": 29.0,
+            "developer_count": 12.0
+          }
+        },
+        {
+          "file": "data-transfer-object/src/main/java/com/iluwatar/datatransfer/App.java",
+          "class_name": "App",
+          "class_identity": "com.iluwatar.datatransfer.App",
+          "loc": 91,
+          "churn": 317,
+          "revisions": 14,
+          "risk_probability": 0.40971182883192464,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 91.0,
+            "WMC": 2.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 31.0,
+            "LCOM5": 0.0,
+            "CBO": 6.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 0.0,
+            "CBOI": 0.0,
+            "CD": 0.07692307692307693,
+            "code_churn": 317.0,
+            "revision_count": 14.0,
+            "developer_count": 8.0
+          }
+        },
+        {
+          "file": "mute-idiom/src/main/java/com/iluwatar/mute/App.java",
+          "class_name": "App",
+          "class_identity": "com.iluwatar.mute.App",
+          "loc": 56,
+          "churn": 254,
+          "revisions": 14,
+          "risk_probability": 0.40579484469592453,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 56.0,
+            "WMC": 6.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 18.0,
+            "LCOM5": 0.0,
+            "CBO": 3.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 1.0,
+            "CBOI": 0.0,
+            "CD": 0.25,
+            "code_churn": 254.0,
+            "revision_count": 14.0,
+            "developer_count": 8.0
+          }
+        },
+        {
+          "file": "microservices-log-aggregation/src/main/java/com/iluwatar/logaggregation/LogProducer.java",
+          "class_name": "LogProducer",
+          "class_identity": "com.iluwatar.logaggregation.LogProducer",
+          "loc": 17,
+          "churn": 314,
+          "revisions": 21,
+          "risk_probability": 0.4045187572740657,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 17.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 6.0,
+            "LCOM5": 0.0,
+            "CBO": 3.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 0.0,
+            "CBOI": 1.0,
+            "CD": 0.35294117647058826,
+            "code_churn": 314.0,
+            "revision_count": 21.0,
+            "developer_count": 13.0
+          }
+        },
+        {
+          "file": "game-loop/src/main/java/com/iluwatar/gameloop/VariableStepGameLoop.java",
+          "class_name": "VariableStepGameLoop",
+          "class_identity": "com.iluwatar.gameloop.VariableStepGameLoop",
+          "loc": 19,
+          "churn": 296,
+          "revisions": 22,
+          "risk_probability": 0.4045094468028564,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 19.0,
+            "WMC": 2.0,
+            "DIT": 1.0,
+            "NOC": 0.0,
+            "RFC": 7.0,
+            "LCOM5": 0.0,
+            "CBO": 1.0,
+            "NPA": 0.0,
+            "NPM": 0.0,
+            "NLE": 1.0,
+            "CBOI": 2.0,
+            "CD": 0.0,
+            "code_churn": 296.0,
+            "revision_count": 22.0,
+            "developer_count": 14.0
+          }
+        },
+        {
+          "file": "collection-pipeline/src/test/java/com/iluwatar/collectionpipeline/AppTest.java",
+          "class_name": "AppTest",
+          "class_identity": "com.iluwatar.collectionpipeline.AppTest",
+          "loc": 52,
+          "churn": 426,
+          "revisions": 35,
+          "risk_probability": 0.40407132922732314,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 52.0,
+            "WMC": 4.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 12.0,
+            "LCOM5": 0.0,
+            "CBO": 3.0,
+            "NPA": 0.0,
+            "NPM": 0.0,
+            "NLE": 0.0,
+            "CBOI": 0.0,
+            "CD": 0.0,
+            "code_churn": 426.0,
+            "revision_count": 35.0,
+            "developer_count": 18.0
+          }
+        },
+        {
+          "file": "singleton/src/main/java/com/iluwatar/singleton/IvoryTower.java",
+          "class_name": "IvoryTower",
+          "class_identity": "com.iluwatar.singleton.IvoryTower",
+          "loc": 22,
+          "churn": 299,
+          "revisions": 24,
+          "risk_probability": 0.4029522360184666,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 22.0,
+            "WMC": 2.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 3.0,
+            "LCOM5": 0.0,
+            "CBO": 1.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 1.0,
+            "CBOI": 1.0,
+            "CD": 0.36363636363636365,
+            "code_churn": 299.0,
+            "revision_count": 24.0,
+            "developer_count": 12.0
+          }
+        },
+        {
+          "file": "factory-method/src/main/java/com/iluwatar/factory/method/App.java",
+          "class_name": "App",
+          "class_identity": "com.iluwatar.factory.method.App",
+          "loc": 24,
+          "churn": 403,
+          "revisions": 24,
+          "risk_probability": 0.402190243757817,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 24.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 5.0,
+            "LCOM5": 0.0,
+            "CBO": 2.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 0.0,
+            "CBOI": 0.0,
+            "CD": 0.20833333333333334,
+            "code_churn": 403.0,
+            "revision_count": 24.0,
+            "developer_count": 13.0
+          }
+        },
+        {
+          "file": "microservices-idempotent-consumer/src/main/java/com/iluwatar/idempotentconsumer/Request.java",
+          "class_name": "Request",
+          "class_identity": "com.iluwatar.idempotentconsumer.Request",
+          "loc": 19,
+          "churn": 468,
+          "revisions": 21,
+          "risk_probability": 0.40154441246059874,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 19.0,
+            "WMC": 2.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 1.0,
+            "LCOM5": 0.5,
+            "CBO": 2.0,
+            "NPA": 0.0,
+            "NPM": 2.0,
+            "NLE": 0.0,
+            "CBOI": 6.0,
+            "CD": 0.0,
+            "code_churn": 468.0,
+            "revision_count": 21.0,
+            "developer_count": 13.0
+          }
+        },
+        {
+          "file": "hexagonal-architecture/src/main/java/com/iluwatar/hexagonal/administration/ConsoleAdministration.java",
+          "class_name": "ConsoleAdministration",
+          "class_identity": "com.iluwatar.hexagonal.administration.ConsoleAdministration",
+          "loc": 44,
+          "churn": 469,
+          "revisions": 32,
+          "risk_probability": 0.3987690335441619,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 44.0,
+            "WMC": 3.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 16.0,
+            "LCOM5": 0.0,
+            "CBO": 3.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 6.0,
+            "CBOI": 0.0,
+            "CD": 0.022727272727272728,
+            "code_churn": 469.0,
+            "revision_count": 32.0,
+            "developer_count": 10.0
+          }
+        },
+        {
+          "file": "pipeline/src/main/java/com/iluwatar/pipeline/ConvertToCharArrayHandler.java",
+          "class_name": "ConvertToCharArrayHandler",
+          "class_identity": "com.iluwatar.pipeline.ConvertToCharArrayHandler",
+          "loc": 16,
+          "churn": 237,
+          "revisions": 19,
+          "risk_probability": 0.39845807287392143,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 16.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 5.0,
+            "LCOM5": 0.0,
+            "CBO": 2.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 0.0,
+            "CBOI": 2.0,
+            "CD": 0.0,
+            "code_churn": 237.0,
+            "revision_count": 19.0,
+            "developer_count": 12.0
+          }
+        },
+        {
+          "file": "thread-pool-executor/src/main/java/com/iluwatar/threadpoolexecutor/VipGuestCheckInTask.java",
+          "class_name": "VipGuestCheckInTask",
+          "class_identity": "com.iluwatar.threadpoolexecutor.VipGuestCheckInTask",
+          "loc": 16,
+          "churn": 256,
+          "revisions": 18,
+          "risk_probability": 0.39845807287392143,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 16.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 5.0,
+            "LCOM5": 0.0,
+            "CBO": 2.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 0.0,
+            "CBOI": 2.0,
+            "CD": 0.0,
+            "code_churn": 256.0,
+            "revision_count": 18.0,
+            "developer_count": 12.0
+          }
+        },
+        {
+          "file": "client-session/src/main/java/com/iluwatar/client/session/App.java",
+          "class_name": "App",
+          "class_identity": "com.iluwatar.client.session.App",
+          "loc": 17,
+          "churn": 284,
+          "revisions": 20,
+          "risk_probability": 0.39713213474549336,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 17.0,
+            "WMC": 1.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 5.0,
+            "LCOM5": 0.0,
+            "CBO": 2.0,
+            "NPA": 0.0,
+            "NPM": 1.0,
+            "NLE": 0.0,
+            "CBOI": 0.0,
+            "CD": 0.29411764705882354,
+            "code_churn": 284.0,
+            "revision_count": 20.0,
+            "developer_count": 12.0
+          }
+        },
+        {
+          "file": "composite/src/main/java/com/iluwatar/composite/Messenger.java",
+          "class_name": "Messenger",
+          "class_identity": "com.iluwatar.composite.Messenger",
+          "loc": 33,
+          "churn": 476,
+          "revisions": 16,
+          "risk_probability": 0.39699394784601016,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 33.0,
+            "WMC": 2.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 5.0,
+            "LCOM5": 0.0,
+            "CBO": 3.0,
+            "NPA": 0.0,
+            "NPM": 0.0,
+            "NLE": 0.0,
+            "CBOI": 2.0,
+            "CD": 0.0,
+            "code_churn": 476.0,
+            "revision_count": 16.0,
+            "developer_count": 11.0
+          }
+        },
+        {
+          "file": "hexagonal-architecture/src/main/java/com/iluwatar/hexagonal/banking/MongoBank.java",
+          "class_name": "MongoBank",
+          "class_identity": "com.iluwatar.hexagonal.banking.MongoBank",
+          "loc": 69,
+          "churn": 296,
+          "revisions": 15,
+          "risk_probability": 0.39585759293149936,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 69.0,
+            "WMC": 7.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 25.0,
+            "LCOM5": 1.0,
+            "CBO": 7.0,
+            "NPA": 0.0,
+            "NPM": 7.0,
+            "NLE": 1.0,
+            "CBOI": 2.0,
+            "CD": 0.057971014492753624,
+            "code_churn": 296.0,
+            "revision_count": 15.0,
+            "developer_count": 7.0
+          }
+        },
+        {
+          "file": "acyclic-visitor/src/main/java/com/iluwatar/acyclicvisitor/ConfigureForDosVisitor.java",
+          "class_name": "ConfigureForDosVisitor",
+          "class_identity": "com.iluwatar.acyclicvisitor.ConfigureForDosVisitor",
+          "loc": 12,
+          "churn": 132,
+          "revisions": 20,
+          "risk_probability": 0.3924865840376725,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 12.0,
+            "WMC": 2.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 2.0,
+            "LCOM5": 0.0,
+            "CBO": 3.0,
+            "NPA": 0.0,
+            "NPM": 2.0,
+            "NLE": 0.0,
+            "CBOI": 3.0,
+            "CD": 0.0,
+            "code_churn": 132.0,
+            "revision_count": 20.0,
+            "developer_count": 13.0
+          }
+        },
+        {
+          "file": "layered-architecture/src/main/java/entity/CakeLayer.java",
+          "class_name": "CakeLayer",
+          "class_identity": "entity.CakeLayer",
+          "loc": 21,
+          "churn": 402,
+          "revisions": 29,
+          "risk_probability": 0.3902503659906605,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 21.0,
+            "WMC": 2.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 5.0,
+            "LCOM5": 0.75,
+            "CBO": 1.0,
+            "NPA": 0.0,
+            "NPM": 2.0,
+            "NLE": 0.0,
+            "CBOI": 4.0,
+            "CD": 0.0,
+            "code_churn": 402.0,
+            "revision_count": 29.0,
+            "developer_count": 15.0
+          }
+        },
+        {
+          "file": "layered-architecture/src/main/java/entity/CakeTopping.java",
+          "class_name": "CakeTopping",
+          "class_identity": "entity.CakeTopping",
+          "loc": 21,
+          "churn": 404,
+          "revisions": 29,
+          "risk_probability": 0.3902503659906605,
+          "risk_level": "LOW",
+          "metrics": {
+            "LOC": 21.0,
+            "WMC": 2.0,
+            "DIT": 0.0,
+            "NOC": 0.0,
+            "RFC": 5.0,
+            "LCOM5": 0.75,
+            "CBO": 1.0,
+            "NPA": 0.0,
+            "NPM": 2.0,
+            "NLE": 0.0,
+            "CBOI": 4.0,
+            "CD": 0.0,
+            "code_churn": 404.0,
+            "revision_count": 29.0,
+            "developer_count": 15.0
+          }
+        }
+      ],
+      "api_top50_vs_full_local_matrix": {
+        "matched_rows": 50,
+        "mismatches": 0
+      }
+    },
+    "incomplete_shallow_history": {
+      "request": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/scan-repo",
+        "json": {
+          "url": "file:///C:/Users/vikas/AppData/Local/Temp/sqam-live-cases-c6sgrjc8/shallow-http-request"
+        }
+      },
+      "source_repository": "https://github.com/kevinsawicki/http-request.git",
+      "source_is_shallow": "true",
+      "status": 200,
+      "response": {
+        "repository": "file:///C:/Users/vikas/AppData/Local/Temp/sqam-live-cases-c6sgrjc8/shallow-http-request",
+        "repository_commit": "2d62a3e9da726942a93cf16b6e91c0187e6c0136",
+        "java_files_discovered": 4,
+        "total_java_files_analyzed": 4,
+        "classes_discovered": 13,
+        "files_scored": 4,
+        "classes_scored": 4,
+        "unidentified_class_file_count": 0,
+        "unidentified_class_files": [],
+        "class_declarations_not_individually_scored": 9,
+        "non_primary_classes_not_scored": 9,
+        "non_primary_class_reason": "The scanner predicts one primary top-level class per Java file; additional and nested declarations are not individually scored.",
+        "context_parse_failures": [],
+        "analysis_failures": [],
+        "unresolved_project_references": 137,
+        "files": [
+          {
+            "file": "lib/src/main/java/com/github/kevinsawicki/http/HttpRequest.java",
+            "class_name": "HttpRequest",
+            "class_identity": "com.github.kevinsawicki.http.HttpRequest",
+            "loc": 3162,
+            "churn": 3259,
+            "revisions": 1,
+            "risk_probability": 0.07789802289281997,
+            "risk_level": "LOW",
+            "metrics": {
+              "LOC": 3162.0,
+              "WMC": 189.0,
+              "DIT": 0.0,
+              "NOC": 0.0,
+              "RFC": 200.0,
+              "LCOM5": 0.9900779588944011,
+              "CBO": 47.0,
+              "NPA": 30.0,
+              "NPM": 145.0,
+              "NLE": 9.0,
+              "CBOI": 1.0,
+              "CD": 0.4803921568627451,
+              "code_churn": 3259.0,
+              "revision_count": 1.0,
+              "developer_count": 1.0
+            }
+          },
+          {
+            "file": "lib/src/test/java/com/github/kevinsawicki/http/ServerTestCase.java",
+            "class_name": "ServerTestCase",
+            "class_identity": "com.github.kevinsawicki.http.ServerTestCase",
+            "loc": 160,
+            "churn": 214,
+            "revisions": 1,
+            "risk_probability": 0.03752955564614758,
+            "risk_level": "LOW",
+            "metrics": {
+              "LOC": 160.0,
+              "WMC": 3.0,
+              "DIT": 0.0,
+              "NOC": 1.0,
+              "RFC": 25.0,
+              "LCOM5": 1.0833333333333333,
+              "CBO": 11.0,
+              "NPA": 0.0,
+              "NPM": 3.0,
+              "NLE": 1.0,
+              "CBOI": 1.0,
+              "CD": 0.24375,
+              "code_churn": 214.0,
+              "revision_count": 1.0,
+              "developer_count": 1.0
+            }
+          },
+          {
+            "file": "lib/src/test/java/com/github/kevinsawicki/http/HttpRequestTest.java",
+            "class_name": "HttpRequestTest",
+            "class_identity": "com.github.kevinsawicki.http.HttpRequestTest",
+            "loc": 3606,
+            "churn": 3697,
+            "revisions": 1,
+            "risk_probability": 0.03640386571719228,
+            "risk_level": "LOW",
+            "metrics": {
+              "LOC": 3606.0,
+              "WMC": 163.0,
+              "DIT": 1.0,
+              "NOC": 0.0,
+              "RFC": 309.0,
+              "LCOM5": 0.1697530864197531,
+              "CBO": 25.0,
+              "NPA": 0.0,
+              "NPM": 163.0,
+              "NLE": 2.0,
+              "CBOI": 0.0,
+              "CD": 0.22046589018302828,
+              "code_churn": 3697.0,
+              "revision_count": 1.0,
+              "developer_count": 1.0
+            }
+          },
+          {
+            "file": "lib/src/test/java/com/github/kevinsawicki/http/EncodeTest.java",
+            "class_name": "EncodeTest",
+            "class_identity": "com.github.kevinsawicki.http.EncodeTest",
+            "loc": 74,
+            "churn": 106,
+            "revisions": 1,
+            "risk_probability": 0.030271252537989596,
+            "risk_level": "LOW",
+            "metrics": {
+              "LOC": 74.0,
+              "WMC": 2.0,
+              "DIT": 0.0,
+              "NOC": 0.0,
+              "RFC": 3.0,
+              "LCOM5": 0.0,
+              "CBO": 0.0,
+              "NPA": 0.0,
+              "NPM": 2.0,
+              "NLE": 0.0,
+              "CBOI": 0.0,
+              "CD": 0.08108108108108109,
+              "code_churn": 106.0,
+              "revision_count": 1.0,
+              "developer_count": 1.0
+            }
+          }
+        ]
+      }
+    },
+    "invalid_url": {
+      "request": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/scan-repo",
+        "json": {
+          "url": "not-a-valid-repository"
+        }
+      },
+      "status": 400,
+      "response": {
+        "detail": "Invalid repository URL or path. Must start with http://, https://, or be a valid repository."
+      }
+    },
+    "clone_failure": {
+      "request": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/scan-repo",
+        "json": {
+          "url": "file:///C:/Users/vikas/AppData/Local/Temp/sqam-live-cases-c6sgrjc8/missing-repository.git"
+        }
+      },
+      "status": 400,
+      "response": {
+        "detail": "Failed to clone repository: Cmd('git') failed due to: exit code(128)\n  cmdline: git clone -v -- file:///C:/Users/vikas/AppData/Local/Temp/sqam-live-cases-c6sgrjc8/missing-repository.git C:\\Users\\vikas\\AppData\\Local\\Temp\\sqam_scan_j3_zipl1\n  stderr: 'Cloning into 'C:\\Users\\vikas\\AppData\\Local\\Temp\\sqam_scan_j3_zipl1'...\nfatal: 'C:/Users/vikas/AppData/Local/Temp/sqam-live-cases-c6sgrjc8/missing-repository.git' does not appear to be a git repository\nfatal: Could not read from remote repository.\n\nPlease make sure you have the correct access rights\nand the repository exists.\n'"
+      }
+    },
+    "empty_no_commit_repository": {
+      "request": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/scan-repo",
+        "json": {
+          "url": "file:///C:/Users/vikas/AppData/Local/Temp/sqam-live-cases-c6sgrjc8/empty-repository"
+        }
+      },
+      "status": 200,
+      "response": {
+        "message": "No Java source files were found in the specified repository.",
+        "repository": "file:///C:/Users/vikas/AppData/Local/Temp/sqam-live-cases-c6sgrjc8/empty-repository",
+        "repository_commit": null,
+        "java_files_discovered": 0,
+        "files_scored": 0,
+        "classes_discovered": 0,
+        "classes_scored": 0,
+        "context_parse_failures": [],
+        "analysis_failures": [],
+        "unresolved_project_references": 0,
+        "unidentified_class_files": [],
+        "files": []
+      }
+    },
+    "unsupported_java_syntax": {
+      "request": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/scan-repo",
+        "json": {
+          "url": "file:///C:/Users/vikas/AppData/Local/Temp/sqam-live-cases-c6sgrjc8/unsupported-java"
+        }
+      },
+      "status": 200,
+      "response": {
+        "repository": "file:///C:/Users/vikas/AppData/Local/Temp/sqam-live-cases-c6sgrjc8/unsupported-java",
+        "repository_commit": "874505696244bedbd9a73fe189fd528474f93961",
+        "java_files_discovered": 1,
+        "total_java_files_analyzed": 1,
+        "classes_discovered": 0,
+        "files_scored": 1,
+        "classes_scored": 0,
+        "unidentified_class_file_count": 1,
+        "unidentified_class_files": [
+          {
+            "file": "ModernRecord.java",
+            "reason": "JavaSyntaxError: "
+          }
+        ],
+        "class_declarations_not_individually_scored": 0,
+        "non_primary_classes_not_scored": 0,
+        "non_primary_class_reason": "The scanner predicts one primary top-level class per Java file; additional and nested declarations are not individually scored.",
+        "context_parse_failures": [
+          {
+            "path": "ModernRecord.java",
+            "error": "JavaSyntaxError: "
+          }
+        ],
+        "analysis_failures": [],
+        "unresolved_project_references": 0,
+        "files": [
+          {
+            "file": "ModernRecord.java",
+            "class_name": "",
+            "class_identity": "",
+            "loc": 1,
+            "churn": 1,
+            "revisions": 1,
+            "risk_probability": 0.0,
+            "risk_level": "LOW",
+            "metrics": {
+              "LOC": 1.0,
+              "WMC": 1.0,
+              "DIT": 0.0,
+              "NOC": 0.0,
+              "RFC": 1.0,
+              "LCOM5": 0.0,
+              "CBO": 1.0,
+              "NPA": 0.0,
+              "NPM": 1.0,
+              "NLE": 0.0,
+              "CBOI": 0.0,
+              "CD": 0.0,
+              "code_churn": 1.0,
+              "revision_count": 1.0,
+              "developer_count": 1.0
+            }
+          }
+        ]
+      }
+    }
+  }
+}

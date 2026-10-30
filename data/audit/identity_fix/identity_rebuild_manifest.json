@@ -1,0 +1,327 @@
+{
+  "run_id": "20261030_142648",
+  "identity_features_recalculated": [
+    "DIT",
+    "NOC",
+    "CBOI"
+  ],
+  "unrelated_features_unchanged": {
+    "LOC": 0,
+    "WMC": 0,
+    "RFC": 0,
+    "LCOM5": 0,
+    "CBO": 0,
+    "NPA": 0,
+    "NPM": 0,
+    "NLE": 0,
+    "CD": 0
+  },
+  "record_count": 12244,
+  "release_count": 12,
+  "label_checks": [
+    {
+      "release": "0550afa689cc5c7860d4378b27ecd38d35c05570",
+      "raw_records": 1110,
+      "retained_records": 1110,
+      "label_mismatches": 0,
+      "excluded_raw_records": 0
+    },
+    {
+      "release": "17d340a7d2661f0a0c7e284b49cd70f5a4495d6b",
+      "raw_records": 1412,
+      "retained_records": 1412,
+      "label_mismatches": 0,
+      "excluded_raw_records": 0
+    },
+    {
+      "release": "1b683f4ec07bcfa40149f086d32240f805487e66",
+      "raw_records": 1418,
+      "retained_records": 1418,
+      "label_mismatches": 0,
+      "excluded_raw_records": 0
+    },
+    {
+      "release": "5a3a326096cf65a58272ee89a5ef1c164cfd9d33",
+      "raw_records": 654,
+      "retained_records": 654,
+      "label_mismatches": 0,
+      "excluded_raw_records": 0
+    },
+    {
+      "release": "5a9eb89e15ca86a3db6a4e21f5c9f94f9ab8fb60",
+      "raw_records": 724,
+      "retained_records": 724,
+      "label_mismatches": 0,
+      "excluded_raw_records": 0
+    },
+    {
+      "release": "61f06547599bb6b98bca99d5bc457eb20bc17cab",
+      "raw_records": 731,
+      "retained_records": 731,
+      "label_mismatches": 0,
+      "excluded_raw_records": 0
+    },
+    {
+      "release": "64155f8a9babcfcf4263cf4d08253a1556e75481",
+      "raw_records": 1154,
+      "retained_records": 1154,
+      "label_mismatches": 0,
+      "excluded_raw_records": 0
+    },
+    {
+      "release": "6e1d2e6ebbc484af60c06bd26cc55349b352e49e",
+      "raw_records": 1405,
+      "retained_records": 1405,
+      "label_mismatches": 0,
+      "excluded_raw_records": 0
+    },
+    {
+      "release": "751f75986b11336ac8310d73c89003b0b09ecb92",
+      "raw_records": 699,
+      "retained_records": 699,
+      "label_mismatches": 0,
+      "excluded_raw_records": 0
+    },
+    {
+      "release": "88c28a42a6fb7dc462c4bc504189a76a815fc265",
+      "raw_records": 867,
+      "retained_records": 866,
+      "label_mismatches": 0,
+      "excluded_raw_records": 1
+    },
+    {
+      "release": "a30e87b6ac67f14a42b97d427bb1c8c6ba18cd87",
+      "raw_records": 657,
+      "retained_records": 657,
+      "label_mismatches": 0,
+      "excluded_raw_records": 0
+    },
+    {
+      "release": "fc3813fba9e2250ddd96877d01f2f694127edb80",
+      "raw_records": 1414,
+      "retained_records": 1414,
+      "label_mismatches": 0,
+      "excluded_raw_records": 0
+    }
+  ],
+  "releases": [
+    {
+      "commit": "0550afa689cc5c7860d4378b27ecd38d35c05570",
+      "head_verified": "0550afa689cc5c7860d4378b27ecd38d35c05570",
+      "rows": 1110,
+      "changed_rows": {
+        "DIT": 0,
+        "NOC": 0,
+        "CBOI": 1
+      },
+      "diagnostics": {
+        "commit": "0550afa689cc5c7860d4378b27ecd38d35c05570",
+        "diagnostic_file": "identity_context_0550afa689cc5c7860d4378b27ecd38d35c05570.json",
+        "unresolved": 1217,
+        "external": 432,
+        "parse_failures": 0,
+        "duplicate_fqcn_count": 0
+      }
+    },
+    {
+      "commit": "17d340a7d2661f0a0c7e284b49cd70f5a4495d6b",
+      "head_verified": "17d340a7d2661f0a0c7e284b49cd70f5a4495d6b",
+      "rows": 1412,
+      "changed_rows": {
+        "DIT": 0,
+        "NOC": 0,
+        "CBOI": 1
+      },
+      "diagnostics": {
+        "commit": "17d340a7d2661f0a0c7e284b49cd70f5a4495d6b",
+        "diagnostic_file": "identity_context_17d340a7d2661f0a0c7e284b49cd70f5a4495d6b.json",
+        "unresolved": 1528,
+        "external": 525,
+        "parse_failures": 0,
+        "duplicate_fqcn_count": 0
+      }
+    },
+    {
+      "commit": "1b683f4ec07bcfa40149f086d32240f805487e66",
+      "head_verified": "1b683f4ec07bcfa40149f086d32240f805487e66",
+      "rows": 1418,
+      "changed_rows": {
+        "DIT": 0,
+        "NOC": 0,
+        "CBOI": 1
+      },
+      "diagnostics": {
+        "commit": "1b683f4ec07bcfa40149f086d32240f805487e66",
+        "diagnostic_file": "identity_context_1b683f4ec07bcfa40149f086d32240f805487e66.json",
+        "unresolved": 1544,
+        "external": 525,
+        "parse_failures": 0,
+        "duplicate_fqcn_count": 0
+      }
+    },
+    {
+      "commit": "5a3a326096cf65a58272ee89a5ef1c164cfd9d33",
+      "head_verified": "5a3a326096cf65a58272ee89a5ef1c164cfd9d33",
+      "rows": 654,
+      "changed_rows": {
+        "DIT": 0,
+        "NOC": 0,
+        "CBOI": 0
+      },
+      "diagnostics": {
+        "commit": "5a3a326096cf65a58272ee89a5ef1c164cfd9d33",
+        "diagnostic_file": "identity_context_5a3a326096cf65a58272ee89a5ef1c164cfd9d33.json",
+        "unresolved": 682,
+        "external": 264,
+        "parse_failures": 0,
+        "duplicate_fqcn_count": 0
+      }
+    },
+    {
+      "commit": "5a9eb89e15ca86a3db6a4e21f5c9f94f9ab8fb60",
+      "head_verified": "5a9eb89e15ca86a3db6a4e21f5c9f94f9ab8fb60",
+      "rows": 724,
+      "changed_rows": {
+        "DIT": 0,
+        "NOC": 0,
+        "CBOI": 0
+      },
+      "diagnostics": {
+        "commit": "5a9eb89e15ca86a3db6a4e21f5c9f94f9ab8fb60",
+        "diagnostic_file": "identity_context_5a9eb89e15ca86a3db6a4e21f5c9f94f9ab8fb60.json",
+        "unresolved": 730,
+        "external": 284,
+        "parse_failures": 0,
+        "duplicate_fqcn_count": 0
+      }
+    },
+    {
+      "commit": "61f06547599bb6b98bca99d5bc457eb20bc17cab",
+      "head_verified": "61f06547599bb6b98bca99d5bc457eb20bc17cab",
+      "rows": 731,
+      "changed_rows": {
+        "DIT": 0,
+        "NOC": 0,
+        "CBOI": 0
+      },
+      "diagnostics": {
+        "commit": "61f06547599bb6b98bca99d5bc457eb20bc17cab",
+        "diagnostic_file": "identity_context_61f06547599bb6b98bca99d5bc457eb20bc17cab.json",
+        "unresolved": 737,
+        "external": 289,
+        "parse_failures": 0,
+        "duplicate_fqcn_count": 0
+      }
+    },
+    {
+      "commit": "64155f8a9babcfcf4263cf4d08253a1556e75481",
+      "head_verified": "64155f8a9babcfcf4263cf4d08253a1556e75481",
+      "rows": 1154,
+      "changed_rows": {
+        "DIT": 0,
+        "NOC": 0,
+        "CBOI": 1
+      },
+      "diagnostics": {
+        "commit": "64155f8a9babcfcf4263cf4d08253a1556e75481",
+        "diagnostic_file": "identity_context_64155f8a9babcfcf4263cf4d08253a1556e75481.json",
+        "unresolved": 1309,
+        "external": 449,
+        "parse_failures": 0,
+        "duplicate_fqcn_count": 0
+      }
+    },
+    {
+      "commit": "6e1d2e6ebbc484af60c06bd26cc55349b352e49e",
+      "head_verified": "6e1d2e6ebbc484af60c06bd26cc55349b352e49e",
+      "rows": 1405,
+      "changed_rows": {
+        "DIT": 0,
+        "NOC": 0,
+        "CBOI": 1
+      },
+      "diagnostics": {
+        "commit": "6e1d2e6ebbc484af60c06bd26cc55349b352e49e",
+        "diagnostic_file": "identity_context_6e1d2e6ebbc484af60c06bd26cc55349b352e49e.json",
+        "unresolved": 1524,
+        "external": 524,
+        "parse_failures": 0,
+        "duplicate_fqcn_count": 0
+      }
+    },
+    {
+      "commit": "751f75986b11336ac8310d73c89003b0b09ecb92",
+      "head_verified": "751f75986b11336ac8310d73c89003b0b09ecb92",
+      "rows": 699,
+      "changed_rows": {
+        "DIT": 0,
+        "NOC": 0,
+        "CBOI": 0
+      },
+      "diagnostics": {
+        "commit": "751f75986b11336ac8310d73c89003b0b09ecb92",
+        "diagnostic_file": "identity_context_751f75986b11336ac8310d73c89003b0b09ecb92.json",
+        "unresolved": 698,
+        "external": 274,
+        "parse_failures": 0,
+        "duplicate_fqcn_count": 0
+      }
+    },
+    {
+      "commit": "88c28a42a6fb7dc462c4bc504189a76a815fc265",
+      "head_verified": "88c28a42a6fb7dc462c4bc504189a76a815fc265",
+      "rows": 866,
+      "changed_rows": {
+        "DIT": 0,
+        "NOC": 0,
+        "CBOI": 0
+      },
+      "diagnostics": {
+        "commit": "88c28a42a6fb7dc462c4bc504189a76a815fc265",
+        "diagnostic_file": "identity_context_88c28a42a6fb7dc462c4bc504189a76a815fc265.json",
+        "unresolved": 936,
+        "external": 338,
+        "parse_failures": 0,
+        "duplicate_fqcn_count": 0
+      }
+    },
+    {
+      "commit": "a30e87b6ac67f14a42b97d427bb1c8c6ba18cd87",
+      "head_verified": "a30e87b6ac67f14a42b97d427bb1c8c6ba18cd87",
+      "rows": 657,
+      "changed_rows": {
+        "DIT": 0,
+        "NOC": 0,
+        "CBOI": 0
+      },
+      "diagnostics": {
+        "commit": "a30e87b6ac67f14a42b97d427bb1c8c6ba18cd87",
+        "diagnostic_file": "identity_context_a30e87b6ac67f14a42b97d427bb1c8c6ba18cd87.json",
+        "unresolved": 683,
+        "external": 267,
+        "parse_failures": 0,
+        "duplicate_fqcn_count": 0
+      }
+    },
+    {
+      "commit": "fc3813fba9e2250ddd96877d01f2f694127edb80",
+      "head_verified": "fc3813fba9e2250ddd96877d01f2f694127edb80",
+      "rows": 1414,
+      "changed_rows": {
+        "DIT": 0,
+        "NOC": 0,
+        "CBOI": 1
+      },
+      "diagnostics": {
+        "commit": "fc3813fba9e2250ddd96877d01f2f694127edb80",
+        "diagnostic_file": "identity_context_fc3813fba9e2250ddd96877d01f2f694127edb80.json",
+        "unresolved": 1528,
+        "external": 525,
+        "parse_failures": 0,
+        "duplicate_fqcn_count": 0
+      }
+    }
+  ],
+  "staging_dir": "D:\\Semester 7\\SQAM\\Project\\App\\AI-Based-Software-Quality-Prediction-Using-Github-Evolution-Metrics\\data\\audit\\identity_fix\\staged_20261030_142648",
+  "promoted": true
+}

@@ -1,0 +1,184 @@
+{
+  "captured_at": "2026-10-30",
+  "frontend_url": "http://127.0.0.1:5173/scanner",
+  "api_endpoint": "http://localhost:8000/scan-repo",
+  "request": {
+    "method": "POST",
+    "json": {
+      "url": "https://github.com/iluwatar/java-design-patterns.git"
+    }
+  },
+  "http_status": 200,
+  "repository_commit": "4cabb204f240240bea319605a5ffa46ded728001",
+  "response_metadata": {
+    "java_files_discovered": 2042,
+    "files_scored": 2042,
+    "class_declarations_discovered": 2080,
+    "classes_scored_with_source_identity": 1881,
+    "unidentified_class_file_count": 161,
+    "known_non_primary_declarations_not_scored": 38,
+    "context_parse_failures": 82,
+    "analysis_failures": 0,
+    "unresolved_project_references": 4631,
+    "top_risk_files_returned": 50
+  },
+  "unidentified_reason_counts": {
+    "No uniquely resolved class/interface identity was available.": 79,
+    "JavaSyntaxError": 81,
+    "LexerError (text block syntax)": 1
+  },
+  "unidentified_file_examples": [
+    {
+      "file": "abstract-document/src/main/java/com/iluwatar/abstractdocument/domain/enums/Property.java",
+      "reason": "No uniquely resolved class/interface identity was available."
+    },
+    {
+      "file": "adapter/src/main/java/com/iluwatar/adapter/package-info.java",
+      "reason": "No uniquely resolved class/interface identity was available."
+    },
+    {
+      "file": "abstract-factory/src/main/java/com/iluwatar/abstractfactory/Kingdom.java",
+      "reason": "JavaSyntaxError"
+    },
+    {
+      "file": "combinator/src/test/java/com/iluwatar/combinator/FinderTest.java",
+      "reason": "LexerError caused by text block syntax"
+    }
+  ],
+  "representative_api_results": [
+    {
+      "file": "promise/src/main/java/com/iluwatar/promise/Promise.java",
+      "class_identity": "com.iluwatar.promise.Promise",
+      "features": {
+        "LOC": 159,
+        "WMC": 9,
+        "DIT": 1,
+        "NOC": 0,
+        "RFC": 15,
+        "LCOM5": 0.8125,
+        "CBO": 9,
+        "NPA": 0,
+        "NPM": 7,
+        "NLE": 1,
+        "CBOI": 4,
+        "CD": 0.31446540880503143,
+        "code_churn": 590,
+        "revision_count": 18,
+        "developer_count": 7
+      },
+      "risk_probability": 0.5511145647970821,
+      "risk_level": "HIGH"
+    },
+    {
+      "file": "repository/src/main/java/com/iluwatar/repository/Person.java",
+      "class_identity": "com.iluwatar.repository.Person",
+      "features": {
+        "LOC": 14,
+        "WMC": 1,
+        "DIT": 0,
+        "NOC": 0,
+        "RFC": 1,
+        "LCOM5": 0,
+        "CBO": 0,
+        "NPA": 0,
+        "NPM": 1,
+        "NLE": 0,
+        "CBOI": 7,
+        "CD": 0.07142857142857142,
+        "code_churn": 430,
+        "revision_count": 20,
+        "developer_count": 12
+      },
+      "risk_probability": 0.5151925540329247,
+      "risk_level": "HIGH"
+    },
+    {
+      "file": "layered-architecture/src/main/java/service/CakeBakingService.java",
+      "class_identity": "service.CakeBakingService",
+      "features": {
+        "LOC": 26,
+        "WMC": 9,
+        "DIT": 0,
+        "NOC": 1,
+        "RFC": 9,
+        "LCOM5": 0,
+        "CBO": 5,
+        "NPA": 0,
+        "NPM": 0,
+        "NLE": 0,
+        "CBOI": 4,
+        "CD": 0.23076923076923078,
+        "code_churn": 382,
+        "revision_count": 21,
+        "developer_count": 8
+      },
+      "risk_probability": 0.5117641321223475,
+      "risk_level": "HIGH"
+    }
+  ],
+  "renamed_file_validation": {
+    "repository_commit": "4cabb204f240240bea319605a5ffa46ded728001",
+    "rename_commit": "6cd2d0353a40d132a4945c09a28ee70580408f72",
+    "old_path": "hexagonal/src/main/java/com/iluwatar/hexagonal/banking/InMemoryBank.java",
+    "new_path": "hexagonal-architecture/src/main/java/com/iluwatar/hexagonal/banking/InMemoryBank.java",
+    "native_git_log_follow": {
+      "code_churn": 219,
+      "revision_count": 19,
+      "developer_count": 10
+    },
+    "scored_row_at_current_path": {
+      "class_identity": "com.iluwatar.hexagonal.banking.InMemoryBank",
+      "LOC": 30,
+      "WMC": 3,
+      "DIT": 0,
+      "NOC": 0,
+      "RFC": 6,
+      "LCOM5": 1.5,
+      "CBO": 3,
+      "NPA": 0,
+      "NPM": 3,
+      "NLE": 1,
+      "CBOI": 2,
+      "CD": 0,
+      "code_churn": 219,
+      "revision_count": 19,
+      "developer_count": 10,
+      "risk_probability": 0.11907196659918158,
+      "risk_level": "LOW"
+    },
+    "returned_in_api_top_50": false,
+    "note": "The file was discovered and scored in the independent full 2,042-file replay; API response intentionally returns only top 50 risk files."
+  },
+  "api_sample_crosscheck": {
+    "returned_top_50_rows_compared_to_full_local_extractor": 50,
+    "feature_and_probability_mismatches": 0,
+    "maximum_absolute_difference": 0.0,
+    "local_matrix_shape": [2042, 15],
+    "missing_feature_cells": 0,
+    "all_values_finite": true
+  },
+  "shallow_history_case": {
+    "source_repo": "https://github.com/kevinsawicki/http-request.git",
+    "source_clone_was_shallow": true,
+    "api_http_status": 200,
+    "repository_commit": "2d62a3e9da726942a93cf16b6e91c0187e6c0136",
+    "java_files_discovered": 4,
+    "example_file": "lib/src/main/java/com/github/kevinsawicki/http/HttpRequest.java",
+    "code_churn": 3259,
+    "revision_count": 1,
+    "developer_count": 1,
+    "note": "The scanner reports history available in the shallow clone; evolution metrics are incomplete compared with full history."
+  },
+  "edge_case_http_results": {
+    "invalid_url": 400,
+    "missing_repository_clone_failure": 400,
+    "empty_git_repository_without_commit": 200,
+    "unsupported_record_syntax": 200,
+    "unsupported_record_context_parse_failures": 1,
+    "unsupported_record_unidentified_class_files": 1,
+    "unsupported_record_file_level_metrics_returned": true
+  },
+  "full_http_payloads_and_edge_response_bodies": "data/repository_scan_integration/live_api_evidence.json",
+  "full_file_feature_matrix": "data/repository_scan_integration/java_design_patterns_scored_files.csv",
+  "full_matrix_summary": "data/repository_scan_integration/java_design_patterns_scan_summary.json"
+}

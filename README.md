@@ -42,14 +42,14 @@ The project works with the following static software metrics:
 | LCOM5 | Lack of Cohesion of Methods |
 | NPA | Number of Public Attributes |
 | NPM | Number of Public Methods |
-| NLE | Number of Logical Expressions |
-| CBOI | Coupling Between Object classes Indicator |
-| CD | Coupling Degree |
+| NLE | Maximum nesting depth of control-flow structures |
+| CBOI | Number of other repository classes referencing this class |
+| CD | Comment lines divided by lines in the analyzed class span |
 | LOC | Lines of Code |
 
 ### 2. Git Evolution Analysis
 
-Git history is mined using PyDriller to calculate:
+Git history is mined with native Git history commands, following file renames and limiting historical datasets to their matching release commit, to calculate:
 
 - **Code Churn** — added lines + deleted lines.
 - **Revision Count** — number of commits affecting a file.
@@ -68,7 +68,7 @@ Models are trained using two feature configurations:
 1. **Static-only features**
 2. **Static + evolution features**
 
-Random Forest uses a small GridSearchCV parameter search over `n_estimators` and `max_depth`, with F1 as the search metric.
+Random Forest uses GridSearchCV over `n_estimators`, `max_depth`, and `min_samples_split`, scored by ROC-AUC with expanding-window folds that hold out complete training releases.
 
 ### 4. Model Evaluation
 
@@ -78,7 +78,9 @@ The evaluation pipeline calculates:
 - Precision
 - Recall
 - F1-score
+- Balanced accuracy
 - ROC-AUC
+- PR-AUC
 - Confusion Matrix
 - ROC Curve
 - Precision-Recall Curve
@@ -157,7 +159,6 @@ AI-Based-Software-Quality-Prediction-Using-Github-Evolution-Metrics/
 - Pandas
 - NumPy
 - Scikit-learn
-- PyDriller
 - Lizard
 - SHAP
 - Joblib
@@ -178,7 +179,7 @@ AI-Based-Software-Quality-Prediction-Using-Github-Evolution-Metrics/
 
 ## Dataset
 
-The project uses the **Software Metrics for Software Defects Prediction** dataset. The repository's current preprocessing implementation loads the `junit4` project data from the downloaded dataset and selects the available static metrics together with evolution features.
+The project uses the JUnit 4 releases from the **Software Metrics for Software Defects Prediction** dataset. Static features are regenerated from each release's exact Git commit with the same Java analyzer used by repository scanning. Evolution features are mined only through that release commit. One source row has a path that does not exist in its corresponding commit; it is recorded in `data/derived/junit4_regenerated/unmapped_records.json` and excluded, while all retained labels are preserved.
 
 The target variable used by the training pipeline is:
 
@@ -186,7 +187,7 @@ The target variable used by the training pipeline is:
 isDefective
 ```
 
-A stratified **80/20 train-test split** is used, followed by feature standardization using `StandardScaler`.
+The chronological holdout uses JUnit 4.8, 4.9, and 4.11 for training (2,251 rows) and JUnit 4.12 and 4.13.1 for testing (2,572 rows). Imputation medians and `StandardScaler` are fitted only on training releases. Model tuning uses earlier training releases to predict later complete releases; held-out test releases are not used in training or tuning.
 
 ---
 
@@ -235,7 +236,15 @@ python src/data/data_acquisition.py
 
 This downloads and extracts the dataset into `data/raw/`.
 
-### Step 2 — Preprocess the Data
+### Step 2 — Regenerate Release Features
+
+```bash
+python src/data/rebuild_static_metrics.py
+```
+
+This checks out each dataset commit, builds whole-repository Java context, and writes regenerated static and rename-aware evolution metrics to `data/derived/junit4_regenerated/`.
+
+### Step 3 — Preprocess the Data
 
 ```bash
 python src/data/preprocessing.py
@@ -252,7 +261,7 @@ data/processed/
 └── scaler.pkl
 ```
 
-### Step 3 — Train the Models
+### Step 4 — Train the Models
 
 ```bash
 python src/models/train.py
@@ -266,7 +275,7 @@ src/models/saved/
 
 The pipeline creates static-only and combined versions of the supported classifiers.
 
-### Step 4 — Evaluate the Models
+### Step 5 — Evaluate the Models
 
 ```bash
 python src/models/evaluate.py
@@ -278,7 +287,7 @@ Evaluation results are written to:
 data/results/evaluation_metrics.json
 ```
 
-### Step 5 — Generate Explainability Results
+### Step 6 — Generate Explainability Results
 
 ```bash
 python src/models/explain.py
@@ -368,11 +377,10 @@ The backend:
 
 1. Clones the repository.
 2. Identifies Java source files.
-3. Extracts available code metrics.
-4. Mines Git history using PyDriller.
-5. Calculates evolution metrics.
-6. Applies the trained scaler and Random Forest model.
-7. Returns the highest-risk files.
+3. Builds whole-repository class context and extracts the shared 12 static metrics.
+4. Mines rename-aware Git history for the three evolution metrics.
+5. Applies training medians, the saved scaler, and the Random Forest model.
+6. Returns the highest-risk files.
 
 The endpoint returns up to **50 files**, sorted by predicted risk probability.
 
@@ -412,21 +420,11 @@ npm run preview
 
 ---
 
-## Important Implementation Notes
+## Reproducibility Notes
 
-### Evolution Metrics in the Current Training Pipeline
+`src/data/feature_extractor.py` defines the shared 15-feature order and extraction path used by training data generation and `/scan-repo`. The API applies the medians and scaler produced by preprocessing. Tests check exact feature parity for the same historical repository snapshot, release-level train/test separation, rename tracking, and exclusion of future Git commits.
 
-The repository contains a Git-history miner in `src/data/git_miner.py` that uses PyDriller to calculate real evolution metrics from repository history.
-
-However, the current `src/data/preprocessing.py` training pipeline does **not** merge historical metrics from `git_miner.py`. Instead, it generates deterministic synthetic/demo evolution metrics for model training. This is explicitly documented in the implementation and is important when interpreting experimental results.
-
-For a research-grade experiment, the synthetic metrics should be replaced by historically aligned Git metrics for the corresponding dataset versions.
-
-### Repository Scan Static Metrics
-
-The current `/scan-repo` implementation uses Lizard for Java-file analysis and computes LOC and a WMC proxy. Several other object-oriented metrics are currently populated with fixed/mock values for fast scanning.
-
-Therefore, repository-scan predictions should be treated as a current prototype implementation rather than evidence that all 12 static metrics are being independently measured from the scanned repository.
+The held-out set contains 25 positive labels among 2,572 rows (0.97%); the 2020 release has no positive labels. Interpret precision, recall, F1, balanced accuracy, ROC-AUC, and PR-AUC alongside this class imbalance. The default API classification threshold remains 0.5.
 
 ---
 
@@ -538,11 +536,10 @@ The system can be used as a prototype for:
 
 Potential extensions include:
 
-- Replace synthetic evolution metrics with historically aligned Git data.
-- Implement complete and consistent extraction of all required static metrics.
-- Support multiple projects and versions instead of the current demonstration subset.
-- Add temporal validation to reduce leakage between historical versions.
-- Improve risk-threshold calibration.
+- Evaluate additional releases and projects with release-specific holdouts and adequate positive labels.
+- Improve class-level mapping for Java files that contain multiple top-level or nested classes.
+- Resolve inheritance and coupling against external classpaths where those dependencies are available.
+- Calibrate the decision threshold using training-period validation data.
 - Expand repository-language support beyond Java.
 - Add richer SHAP visualizations and explanation reports.
 - Integrate automated CI/CD quality checks.

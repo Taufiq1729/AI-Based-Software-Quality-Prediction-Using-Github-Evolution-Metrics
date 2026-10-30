@@ -1,0 +1,53 @@
+{
+  "release_count": 12,
+  "release_dates_sorted": true,
+  "train_test_commit_sets_disjoint": true,
+  "all_training_releases_precede_test": true,
+  "training_releases": [
+    "5a3a326096cf65a58272ee89a5ef1c164cfd9d33",
+    "61f06547599bb6b98bca99d5bc457eb20bc17cab",
+    "88c28a42a6fb7dc462c4bc504189a76a815fc265"
+  ],
+  "test_releases": [
+    "64155f8a9babcfcf4263cf4d08253a1556e75481",
+    "1b683f4ec07bcfa40149f086d32240f805487e66"
+  ],
+  "training_samples": 2251,
+  "training_defects": 101,
+  "training_defect_percentage": 4.486894713460684,
+  "test_samples": 2572,
+  "test_defects": 25,
+  "test_defect_percentage": 0.9720062208398134,
+  "retained_label_mismatches": 0,
+  "unmapped_record_count": 1,
+  "unmapped_records": [
+    {
+      "release": "88c28a42a6fb7dc462c4bc504189a76a815fc265",
+      "row_index": 0,
+      "ID": "L119",
+      "Name": "JunitDependencyTest",
+      "LongName": "JunitDependencyTest",
+      "Path": "C:\\Users\\domco\\Desktop\\DP\\repos\\junit4\\build\\maven\\sample_project_template\\src\\test\\java\\JunitDependencyTest.java",
+      "isDefective": 0,
+      "reason": "Source file 'src/test/java/JunitDependencyTest.java' does not exist in commit '88c28a42a6fb7dc462c4bc504189a76a815fc265'."
+    }
+  ],
+  "feature_columns_exclude_target": true,
+  "feature_columns": [
+    "LOC",
+    "WMC",
+    "DIT",
+    "NOC",
+    "RFC",
+    "LCOM5",
+    "CBO",
+    "NPA",
+    "NPM",
+    "NLE",
+    "CBOI",
+    "CD",
+    "code_churn",
+    "revision_count",
+    "developer_count"
+  ]
+}

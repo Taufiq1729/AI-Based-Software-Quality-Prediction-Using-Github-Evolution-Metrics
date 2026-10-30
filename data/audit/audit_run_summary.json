@@ -1,0 +1,297 @@
+{
+  "parser_construct_probes": {
+    "javalang_version": "0.13.0",
+    "probes": [
+      {
+        "construct": "java_module_declaration",
+        "supported_by_installed_javalang": false,
+        "error": "JavaSyntaxError: ",
+        "probe_source": "module sample { requires java.base; }"
+      },
+      {
+        "construct": "local_var_inference",
+        "supported_by_installed_javalang": true,
+        "error": "",
+        "probe_source": "class Sample { void f() { var value = 1; } }"
+      },
+      {
+        "construct": "record_declaration",
+        "supported_by_installed_javalang": false,
+        "error": "JavaSyntaxError: ",
+        "probe_source": "record Point(int x, int y) {}"
+      },
+      {
+        "construct": "text_block",
+        "supported_by_installed_javalang": false,
+        "error": "JavaSyntaxError: ",
+        "probe_source": "class Sample { String text = \"\"\"text\"\"\"; }"
+      },
+      {
+        "construct": "sealed_class",
+        "supported_by_installed_javalang": false,
+        "error": "JavaSyntaxError: ",
+        "probe_source": "sealed class Base permits Child {} final class Child extends Base {}"
+      },
+      {
+        "construct": "pattern_matching_instanceof",
+        "supported_by_installed_javalang": false,
+        "error": "JavaSyntaxError: ",
+        "probe_source": "class Sample { boolean f(Object x) { return x instanceof String value; } }"
+      },
+      {
+        "construct": "switch_expression",
+        "supported_by_installed_javalang": false,
+        "error": "JavaSyntaxError: ",
+        "probe_source": "class Sample { int f(int x) { return switch (x) { case 1 -> 2; default -> 3; }; } }"
+      }
+    ],
+    "note": "These probes identify grammar boundaries; the release audit separately records parser outcomes for all retained source files."
+  },
+  "static": {
+    "releases_audited": [
+      "0550afa689cc5c7860d4378b27ecd38d35c05570",
+      "17d340a7d2661f0a0c7e284b49cd70f5a4495d6b",
+      "1b683f4ec07bcfa40149f086d32240f805487e66",
+      "5a3a326096cf65a58272ee89a5ef1c164cfd9d33",
+      "5a9eb89e15ca86a3db6a4e21f5c9f94f9ab8fb60",
+      "61f06547599bb6b98bca99d5bc457eb20bc17cab",
+      "64155f8a9babcfcf4263cf4d08253a1556e75481",
+      "6e1d2e6ebbc484af60c06bd26cc55349b352e49e",
+      "751f75986b11336ac8310d73c89003b0b09ecb92",
+      "88c28a42a6fb7dc462c4bc504189a76a815fc265",
+      "a30e87b6ac67f14a42b97d427bb1c8c6ba18cd87",
+      "fc3813fba9e2250ddd96877d01f2f694127edb80"
+    ],
+    "records_audited": 12244,
+    "records_missing_or_failed": 0,
+    "summary_csv": "D:\\Semester 7\\SQAM\\Project\\App\\AI-Based-Software-Quality-Prediction-Using-Github-Evolution-Metrics\\data\\audit\\static\\static_feature_summary.csv"
+  },
+  "git_evolution": {
+    "scenarios": 21,
+    "ordinary_rename_move_and_multi_developer_tests_match": true,
+    "historical_release_sample_count": 12,
+    "all_historical_release_samples_match": true,
+    "output": "D:\\Semester 7\\SQAM\\Project\\App\\AI-Based-Software-Quality-Prediction-Using-Github-Evolution-Metrics\\data\\audit\\git_evolution\\git_evolution_fixture_audit.csv"
+  },
+  "dataset": {
+    "release_count": 12,
+    "release_dates_sorted": true,
+    "train_test_commit_sets_disjoint": true,
+    "all_training_releases_precede_test": true,
+    "training_releases": [
+      "5a3a326096cf65a58272ee89a5ef1c164cfd9d33",
+      "61f06547599bb6b98bca99d5bc457eb20bc17cab",
+      "88c28a42a6fb7dc462c4bc504189a76a815fc265"
+    ],
+    "test_releases": [
+      "64155f8a9babcfcf4263cf4d08253a1556e75481",
+      "1b683f4ec07bcfa40149f086d32240f805487e66"
+    ],
+    "training_samples": 2251,
+    "training_defects": 101,
+    "training_defect_percentage": 4.486894713460684,
+    "test_samples": 2572,
+    "test_defects": 25,
+    "test_defect_percentage": 0.9720062208398134,
+    "retained_label_mismatches": 0,
+    "unmapped_record_count": 1,
+    "unmapped_records": [
+      {
+        "release": "88c28a42a6fb7dc462c4bc504189a76a815fc265",
+        "row_index": 0,
+        "ID": "L119",
+        "Name": "JunitDependencyTest",
+        "LongName": "JunitDependencyTest",
+        "Path": "C:\\Users\\domco\\Desktop\\DP\\repos\\junit4\\build\\maven\\sample_project_template\\src\\test\\java\\JunitDependencyTest.java",
+        "isDefective": 0,
+        "reason": "Source file 'src/test/java/JunitDependencyTest.java' does not exist in commit '88c28a42a6fb7dc462c4bc504189a76a815fc265'."
+      }
+    ],
+    "feature_columns_exclude_target": true,
+    "feature_columns": [
+      "LOC",
+      "WMC",
+      "DIT",
+      "NOC",
+      "RFC",
+      "LCOM5",
+      "CBO",
+      "NPA",
+      "NPM",
+      "NLE",
+      "CBOI",
+      "CD",
+      "code_churn",
+      "revision_count",
+      "developer_count"
+    ]
+  },
+  "models": {
+    "saved_metrics_match_recalculation": true,
+    "saved_comparisons": [
+      {
+        "model": "LogisticRegression",
+        "feature_set": "static",
+        "metric_deltas": {
+          "Accuracy": 0.0,
+          "Balanced_Accuracy": 0.0,
+          "Precision": 0.0,
+          "Recall": 0.0,
+          "F1_Score": 0.0,
+          "ROC_AUC": 0.0,
+          "PR_AUC": 0.0,
+          "Average_Precision": 0.0,
+          "PR_AUC_trapezoidal": 0.0
+        },
+        "confusion_matrix_matches": true
+      },
+      {
+        "model": "LogisticRegression",
+        "feature_set": "combined",
+        "metric_deltas": {
+          "Accuracy": 0.0,
+          "Balanced_Accuracy": 0.0,
+          "Precision": 0.0,
+          "Recall": 0.0,
+          "F1_Score": 0.0,
+          "ROC_AUC": 0.0,
+          "PR_AUC": 0.0,
+          "Average_Precision": 0.0,
+          "PR_AUC_trapezoidal": 0.0
+        },
+        "confusion_matrix_matches": true
+      },
+      {
+        "model": "DecisionTree",
+        "feature_set": "static",
+        "metric_deltas": {
+          "Accuracy": 0.0,
+          "Balanced_Accuracy": 0.0,
+          "Precision": 0.0,
+          "Recall": 0.0,
+          "F1_Score": 0.0,
+          "ROC_AUC": 0.0,
+          "PR_AUC": 0.0,
+          "Average_Precision": 0.0,
+          "PR_AUC_trapezoidal": 0.0
+        },
+        "confusion_matrix_matches": true
+      },
+      {
+        "model": "DecisionTree",
+        "feature_set": "combined",
+        "metric_deltas": {
+          "Accuracy": 0.0,
+          "Balanced_Accuracy": 0.0,
+          "Precision": 0.0,
+          "Recall": 0.0,
+          "F1_Score": 0.0,
+          "ROC_AUC": 0.0,
+          "PR_AUC": 0.0,
+          "Average_Precision": 0.0,
+          "PR_AUC_trapezoidal": 0.0
+        },
+        "confusion_matrix_matches": true
+      },
+      {
+        "model": "RandomForest",
+        "feature_set": "static",
+        "metric_deltas": {
+          "Accuracy": 0.0,
+          "Balanced_Accuracy": 0.0,
+          "Precision": 0.0,
+          "Recall": 0.0,
+          "F1_Score": 0.0,
+          "ROC_AUC": 0.0,
+          "PR_AUC": 0.0,
+          "Average_Precision": 0.0,
+          "PR_AUC_trapezoidal": 0.0
+        },
+        "confusion_matrix_matches": true
+      },
+      {
+        "model": "RandomForest",
+        "feature_set": "combined",
+        "metric_deltas": {
+          "Accuracy": 0.0,
+          "Balanced_Accuracy": 0.0,
+          "Precision": 0.0,
+          "Recall": 0.0,
+          "F1_Score": 0.0,
+          "ROC_AUC": 0.0,
+          "PR_AUC": 0.0,
+          "Average_Precision": 0.0,
+          "PR_AUC_trapezoidal": 0.0
+        },
+        "confusion_matrix_matches": true
+      }
+    ],
+    "majority_class_baseline": {
+      "model": "MajorityClassBaseline",
+      "feature_set": "none",
+      "Accuracy": 0.9902799377916018,
+      "Balanced_Accuracy": 0.5,
+      "Precision": 0.0,
+      "Recall": 0.0,
+      "F1_Score": 0.0,
+      "ROC_AUC": 0.5,
+      "PR_AUC": 0.009720062208398134,
+      "PR_AUC_trapezoidal": 0.5048600311041991,
+      "Average_Precision": 0.009720062208398134,
+      "TN": 2547,
+      "FP": 0,
+      "FN": 25,
+      "TP": 0,
+      "predicted_positive": 0,
+      "positive_probability_min": 0.0,
+      "positive_probability_max": 0.0,
+      "saved_metrics_match": null,
+      "max_saved_metric_absolute_delta": null,
+      "confusion_matrix_matches": null,
+      "threshold_used_for_predict": 0.5
+    },
+    "test_rows": 2572,
+    "test_label_distribution": {
+      "0": 2547,
+      "1": 25
+    },
+    "threshold_selection_implemented": false,
+    "decision_threshold": 0.5,
+    "saved_PR_AUC_definition": "PR_AUC is sklearn average_precision_score. PR_AUC_trapezoidal is separately reported as auc(recall, precision) over sklearn precision_recall_curve points.",
+    "explainability_outputs_reproducible": true,
+    "explainability_hashes_before": {
+      "feature_importance.csv": "ffca615f2905f9895fcd6cf20e3ce0a19a2134a20257711f1ebd3763afbd626c",
+      "shap_values.npy": "a8c0727d20f721f2c253d781e38f636fbd813ce22745dcae77ff4312c0faf25d",
+      "shap_base_values.npy": "9fdd565161a89ab2c44c2b5688e11d6d3dc0b1663fe6ed531523eb112cfa54c7",
+      "shap_X_sample.csv": "304ce14dc295620cb32f7499acd9c3c7e9e97c3d14106bc933393c61bf0b6ec5"
+    },
+    "explainability_hashes_after": {
+      "feature_importance.csv": "ffca615f2905f9895fcd6cf20e3ce0a19a2134a20257711f1ebd3763afbd626c",
+      "shap_values.npy": "a8c0727d20f721f2c253d781e38f636fbd813ce22745dcae77ff4312c0faf25d",
+      "shap_base_values.npy": "9fdd565161a89ab2c44c2b5688e11d6d3dc0b1663fe6ed531523eb112cfa54c7",
+      "shap_X_sample.csv": "304ce14dc295620cb32f7499acd9c3c7e9e97c3d14106bc933393c61bf0b6ec5"
+    },
+    "saved_scaler_feature_count": 15,
+    "saved_scaler_feature_names": [
+      "LOC",
+      "WMC",
+      "DIT",
+      "NOC",
+      "RFC",
+      "LCOM5",
+      "CBO",
+      "NPA",
+      "NPM",
+      "NLE",
+      "CBOI",
+      "CD",
+      "code_churn",
+      "revision_count",
+      "developer_count"
+    ],
+    "imputer_feature_names_match": true,
+    "saved_preprocessing_max_absolute_difference_from_test_matrix": 3.552713678800501e-15,
+    "model_paths_loadable": true,
+    "evaluation_source_uses_model_predict_default_threshold": true
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "javalang_version": "0.13.0",
+  "probes": [
+    {
+      "construct": "java_module_declaration",
+      "supported_by_installed_javalang": false,
+      "error": "JavaSyntaxError: ",
+      "probe_source": "module sample { requires java.base; }"
+    },
+    {
+      "construct": "local_var_inference",
+      "supported_by_installed_javalang": true,
+      "error": "",
+      "probe_source": "class Sample { void f() { var value = 1; } }"
+    },
+    {
+      "construct": "record_declaration",
+      "supported_by_installed_javalang": false,
+      "error": "JavaSyntaxError: ",
+      "probe_source": "record Point(int x, int y) {}"
+    },
+    {
+      "construct": "text_block",
+      "supported_by_installed_javalang": false,
+      "error": "JavaSyntaxError: ",
+      "probe_source": "class Sample { String text = \"\"\"text\"\"\"; }"
+    },
+    {
+      "construct": "sealed_class",
+      "supported_by_installed_javalang": false,
+      "error": "JavaSyntaxError: ",
+      "probe_source": "sealed class Base permits Child {} final class Child extends Base {}"
+    },
+    {
+      "construct": "pattern_matching_instanceof",
+      "supported_by_installed_javalang": false,
+      "error": "JavaSyntaxError: ",
+      "probe_source": "class Sample { boolean f(Object x) { return x instanceof String value; } }"
+    },
+    {
+      "construct": "switch_expression",
+      "supported_by_installed_javalang": false,
+      "error": "JavaSyntaxError: ",
+      "probe_source": "class Sample { int f(int x) { return switch (x) { case 1 -> 2; default -> 3; }; } }"
+    }
+  ],
+  "note": "These probes identify grammar boundaries; the release audit separately records parser outcomes for all retained source files."
+}

@@ -1,0 +1,100 @@
+{
+  "repository": "https://github.com/iluwatar/java-design-patterns.git",
+  "commit": "4cabb204f240240bea319605a5ffa46ded728001",
+  "api_reported_commit": "4cabb204f240240bea319605a5ffa46ded728001",
+  "java_files_discovered": 2042,
+  "files_scored": 2042,
+  "classes_discovered": 2080,
+  "classes_with_fqcn": 1881,
+  "non_primary_class_declarations": 199,
+  "context_parse_failures": 82,
+  "analysis_failures": 0,
+  "unresolved_project_references": 4631,
+  "feature_columns": [
+    "LOC",
+    "WMC",
+    "DIT",
+    "NOC",
+    "RFC",
+    "LCOM5",
+    "CBO",
+    "NPA",
+    "NPM",
+    "NLE",
+    "CBOI",
+    "CD",
+    "code_churn",
+    "revision_count",
+    "developer_count"
+  ],
+  "feature_matrix_shape": [
+    2042,
+    15
+  ],
+  "missing_feature_cells": 0,
+  "all_feature_cells_numeric_and_finite": true,
+  "per_feature_unique_values": {
+    "LOC": 164,
+    "WMC": 21,
+    "DIT": 4,
+    "NOC": 9,
+    "RFC": 50,
+    "LCOM5": 96,
+    "CBO": 32,
+    "NPA": 6,
+    "NPM": 15,
+    "NLE": 8,
+    "CBOI": 18,
+    "CD": 543,
+    "code_churn": 461,
+    "revision_count": 35,
+    "developer_count": 20
+  },
+  "risk_probability_range": [
+    0.0,
+    0.5511145647970821
+  ],
+  "high_risk_count": 5,
+  "low_risk_count": 2037,
+  "saved_scaler_features": [
+    "LOC",
+    "WMC",
+    "DIT",
+    "NOC",
+    "RFC",
+    "LCOM5",
+    "CBO",
+    "NPA",
+    "NPM",
+    "NLE",
+    "CBOI",
+    "CD",
+    "code_churn",
+    "revision_count",
+    "developer_count"
+  ],
+  "loaded_model": "RandomForest_combined.pkl",
+  "scored_csv": "data/repository_scan_integration/java_design_patterns_scored_files.csv",
+  "api_sample_crosscheck": {
+    "promise/src/main/java/com/iluwatar/promise/Promise.java": {
+      "all_values_match": true,
+      "absolute_deltas": {
+        "LOC": 0.0,
+        "code_churn": 0.0,
+        "revision_count": 0.0,
+        "developer_count": 0.0,
+        "risk_probability": 0.0
+      }
+    },
+    "repository/src/main/java/com/iluwatar/repository/Person.java": {
+      "all_values_match": true,
+      "absolute_deltas": {
+        "LOC": 0.0,
+        "code_churn": 0.0,
+        "revision_count": 0.0,
+        "developer_count": 0.0,
+        "risk_probability": 0.0
+      }
+    }
+  }
+}

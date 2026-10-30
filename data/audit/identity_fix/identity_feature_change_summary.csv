@@ -1,0 +1,13 @@
+feature,records,changed_records,mean_absolute_change,maximum_absolute_change,unchanged_feature_verified
+LOC,12244,0,0.0,0.0,True
+WMC,12244,0,0.0,0.0,True
+DIT,12244,301,0.03324077098987259,4.0,False
+NOC,12244,272,0.04206141783730807,4.0,False
+RFC,12244,0,0.0,0.0,True
+LCOM5,12244,0,0.0,0.0,True
+CBO,12244,0,0.0,0.0,True
+NPA,12244,0,0.0,0.0,True
+NPM,12244,0,0.0,0.0,True
+NLE,12244,0,0.0,0.0,True
+CBOI,12244,9657,2.1551780463900685,78.0,False
+CD,12244,0,0.0,0.0,True
