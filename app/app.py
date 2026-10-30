@@ -267,7 +267,7 @@ with tab2:
 
 with tab3:
     if feature_importance is not None:
-        st.markdown("<div class='glass-card'><h2>Explainability & Feature Importance</h2><p>Identifying which metrics drive the defect predictions (using Random Forest).</p></div>", unsafe_allow_html=True)
+        st.markdown("<div class='glass-card'><h2>Explainability & Feature Importance</h2><p>Identifying which metrics drive the defect predictions (using Logistic Regression).</p></div>", unsafe_allow_html=True)
         
         col1, col2 = st.columns([1, 1.2])
         
@@ -346,7 +346,7 @@ with tab4:
         st.markdown("</div>", unsafe_allow_html=True)
 
     if predict_btn:
-        model_path = "src/models/saved/RandomForest_combined.pkl"
+        model_path = "src/models/saved/LogisticRegression_combined.pkl"
         scaler_path = "data/processed/scaler.pkl"
         
         if os.path.exists(model_path) and os.path.exists(scaler_path):
