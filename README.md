@@ -468,12 +468,6 @@ npm run preview
 
 ---
 
-## License
-
-No explicit license is specified here. Add a `LICENSE` file if the project is intended for public reuse.
-
----
-
 ## Repository
 
 [AI-Based Software Quality Prediction Using GitHub Evolution Metrics](https://github.com/Taufiq1729/AI-Based-Software-Quality-Prediction-Using-Github-Evolution-Metrics)
