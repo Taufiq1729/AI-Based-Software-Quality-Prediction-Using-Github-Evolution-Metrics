@@ -133,11 +133,12 @@ Per-release score quantiles by true class, counts, and full confusion matrices a
 
 ## Reproducibility Checks
 
-- A clean regeneration uses: `python src/data/rebuild_static_metrics.py`, `python src/data/preprocessing.py`, `python src/models/train.py`, `python src/models/evaluate.py`, and `python src/models/explain.py`. `python src/data/rebuild_identity_metrics.py` is the staged, before/after-only command used to recalculate DIT/NOC/CBOI while preserving the original regenerated snapshot.
+- A full clean regeneration uses: `python src/data/rebuild_static_metrics.py`, `python src/data/preprocessing.py`, `python src/models/train.py`, and `python src/models/evaluate.py`. `python src/models/explain.py` regenerates only the explicitly named Logistic Regression Combined explanation artifacts from the saved model and processed matrices; it does not retrain any model. `python src/data/rebuild_identity_metrics.py` is the staged, before/after-only command used to recalculate DIT/NOC/CBOI while preserving the original regenerated snapshot.
 - Feature order is the shared 15-column contract. Saved imputer keys and scaler feature names match it; all six model artifacts load.
 - Applying the persisted medians and scaler to raw test-release features reproduces `X_test.csv` with maximum absolute difference `3.552714e-15`.
-- Model constructors use `random_state=42`; the SHAP sample uses `random_state=42`. Saved evaluation outputs exactly match recalculation from the saved model/test data.
-- Regenerating feature importance and SHAP artifacts produced identical SHA-256 hashes for all four outputs.
+- Model constructors use `random_state=42`; the Logistic Regression Combined SHAP background and sample use `random_state=42`. Saved evaluation outputs exactly match recalculation from the saved model/test data.
+- The legacy generic feature-importance and SHAP artifact hashes in this historical audit refer to Random Forest Combined. Current Logistic Regression Combined outputs use the `logistic_regression_combined_` prefix and include model/hash/output-space metadata; do not interpret the legacy generic files as Logistic Regression explanations.
+- The API accepts raw ordered metrics and applies the persisted training scaler before calling Logistic Regression Combined; repository scanning follows the same transformation. The explanation artifacts use standardized sample/background rows and validate against the same model input representation as evaluation and API inference.
 - Random Forest tuning uses expanding-window CV that holds out whole training releases. The held-out test releases are not used in fitting or threshold selection.
 - `PR_AUC` is `average_precision_score`; `PR_AUC_trapezoidal` remains separate. Threshold selection is not implemented and no threshold was chosen using test labels.
 - Python dependencies are not version-pinned in `requirements.txt`; serialized scikit-learn models and floating-point outputs may not be portable across dependency versions. Pin a tested environment for external reproduction.
@@ -167,3 +168,55 @@ The parity result proves that regenerated values and the authoritative analyzer 
 The test population has only 25 positive rows, all from r4.12; r4.13.1 has no positive labels. Every model has lower accuracy than the majority baseline, and combined Logistic Regression's AP is only 0.0276. These findings do not support generalization or model-superiority claims. More releases/projects and a test design with adequate positive cases are required before final paper claims.
 
 **Final readiness verdict: implementation correction and reproducibility checks pass; predictive research readiness remains insufficient.** Package-qualified named identities removed the simple-name merge problem, but anonymous classes and external classpath resolution remain limitations. The extreme test imbalance and zero-positive latest release prevent strong predictive claims. Treat these model results as exploratory until evaluated on additional temporal releases with sufficient defects.
+
+## Prediction Score Audit
+
+### Inference contract
+
+Both individual prediction and repository scanning load `src/models/saved/LogisticRegression_combined.pkl`. The inference path is raw, ordered `FEATURE_COLUMNS` → saved training medians for missing values → saved training `StandardScaler` → Logistic Regression. The API returns the positive-class `predict_proba` output as `model_score` and retains `probability` / `risk_probability` aliases for compatibility. The returned value is an **uncalibrated model score**, not a verified probability that a file contains a defect.
+
+The UI displays the value on a 0–1 scale. `HIGH` means only that the score meets the model's configured 0.5 classification threshold; it does not confirm a defect. This threshold was not optimized on the held-out test set.
+
+### Reproducible held-out score results
+
+Run from the repository root:
+
+```bash
+python src/models/prediction_audit.py
+```
+
+The script reconstructs and verifies the existing preprocessing transform against the saved train/test matrices, then recalculates metrics on the held-out labels. It does not retrain the classifier or change the dataset, labels, split, or reported evaluation metrics.
+
+| Measure | Logistic Regression Combined | Prevalence-only score baseline |
+|---|---:|---:|
+| Test rows / defects | 2,572 / 25 | — |
+| Defect prevalence | 0.972% | 0.972% |
+| ROC-AUC | 0.78898 | — |
+| Average Precision | 0.027585 | 0.009720 |
+| Precision / recall / F1 at 0.5 | 0.02443 / 0.56 / 0.04682 | — |
+| Confusion matrix (TN, FP, FN, TP) | 1,988 / 559 / 11 / 14 | — |
+| Brier score | 0.174733 | 0.009626 |
+| Log loss | 0.567809 | 0.054711 |
+| 10-bin equal-width ECE | 0.339073 | — |
+
+Saved evaluation metrics were reproduced with a maximum absolute difference of zero (within the audit's `1e-12` comparison). The Brier score and log loss are both substantially worse than the constant-prevalence baseline; the 10-bin ECE is large. These observations are evidence **against interpreting the returned values as calibrated probabilities**. They are descriptive results on this small, highly imbalanced temporal test set, not a calibration fit or independent estimate of future performance.
+
+The held-out top-K ranking is uneven: the highest-scored 5, 10, and 20 records contain no defects; the top 50 contain 2 of 25 defects (precision 0.04, recall 0.08, lift 4.12 over test prevalence). The AP advantage over baseline does not establish that every top-ranked subset is useful.
+
+### Why captured repository scores can be high
+
+The audit re-applies Logistic Regression Combined to the saved Java Design Patterns feature snapshot (2,042 rows). The snapshot metadata says its original stored scores came from `RandomForest_combined.pkl`; those legacy scores are not presented as Logistic Regression results. Recomputed Logistic Regression model scores have minimum 0.00132, median 0.62120, mean 0.58695, maximum 0.99939; 1,379 are at least 0.5 and 66 are at least 0.9.
+
+The saved snapshot has no missing feature cells, but some values are outside the raw training range: WMC 1 row, CBO 11, NLE 5, CD 85, and developer count 2. Most notably, the maximum CBO is 72 versus a training maximum of 23. For the highest-scored captured file, `Commander.java`, the score is 0.99939. Its CBO standardizes to 22.84 training standard deviations and contributes +5.45 to the model's decision log-odds; LOC contributes +7.21, while code churn contributes -7.72. All 15 coefficient contributions plus the intercept reconstruct the model decision score within numerical tolerance.
+
+These are mathematical contributions to this model's output, not causal effects or evidence that the file is defective. They demonstrate that extreme feature values and a different feature distribution can drive very high scores. The captured snapshot is historical evidence, **not a new live scan** and not labeled defect ground truth.
+
+### Calibration and external correctness
+
+No calibrator was fit. Reusing the held-out labels to fit a calibration function and then reporting those same labels as independent validation would be leakage. No independently labeled external repository scan is available, so this audit cannot establish whether scanner results on arbitrary repositories are correct.
+
+To assess external correctness, collect file-level defect labels using an explicit, consistent labeling rule, then evaluate on repository- or time-separated data. To calibrate scores, fit a calibration method (such as sigmoid/Platt or isotonic) on a separate calibration partition and evaluate it on a further untouched partition. Preserve the current model and preprocessing until that protocol demonstrates improved calibration; do not infer calibration from score ranges or the existing holdout alone.
+
+### Generated audit files
+
+`data/results/prediction_audit.json` contains the metric and validation summary. Companion artifacts include calibration bins and a reliability plot, repository feature-distribution statistics, recomputed repository scores, and top-file coefficient contributions. The structured outputs are deterministic for the saved inputs and model.

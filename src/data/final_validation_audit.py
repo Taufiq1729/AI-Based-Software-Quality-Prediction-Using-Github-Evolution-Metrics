@@ -880,10 +880,12 @@ def run_model_audit(audit_dir: Path) -> Dict[str, Any]:
     _atomic_csv(frame, output_dir / "model_evaluation_audit.csv")
 
     explanation_paths = [
-        RESULTS_DIR / "feature_importance.csv",
-        RESULTS_DIR / "shap_values.npy",
-        RESULTS_DIR / "shap_base_values.npy",
-        RESULTS_DIR / "shap_X_sample.csv",
+        RESULTS_DIR / "logistic_regression_combined_feature_coefficients.csv",
+        RESULTS_DIR / "logistic_regression_combined_shap_values.npy",
+        RESULTS_DIR / "logistic_regression_combined_shap_base_values.npy",
+        RESULTS_DIR / "logistic_regression_combined_shap_X_sample.csv",
+        RESULTS_DIR / "logistic_regression_combined_shap_background.csv",
+        RESULTS_DIR / "logistic_regression_combined_explanation_metadata.json",
     ]
     explanation_hashes_before = {path.name: _sha256(path) for path in explanation_paths}
     from src.models.explain import generate_explanations

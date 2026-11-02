@@ -17,18 +17,13 @@ const NavBar = () => {
             <Link to="/" className={location.pathname === '/' ? 'nav-link active' : 'nav-link'}>Home</Link>
           </li>
           <li className="nav-item">
-            <Link to="/about" className={location.pathname === '/about' ? 'nav-link active' : 'nav-link'}>How It Works</Link>
+            <Link to="/how-it-works" className={location.pathname === '/how-it-works' || location.pathname === '/about' ? 'nav-link active' : 'nav-link'}>How It Works</Link>
           </li>
           <li className="nav-item">
             <Link to="/analytics" className={location.pathname === '/analytics' ? 'nav-link active' : 'nav-link'}>Analytics</Link>
           </li>
           <li className="nav-item">
-            <Link to="/scanner" className={location.pathname === '/scanner' ? 'nav-link active' : 'nav-link'}>Repo Scanner</Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/predictor" className={location.pathname === '/predictor' ? 'nav-link active btn-predict' : 'nav-link btn-predict'}>
-              SQA Predictor
-            </Link>
+            <Link to="/scanner" className={location.pathname === '/scanner' ? 'nav-link active nav-scan-link' : 'nav-link nav-scan-link'}>Repository Scanner</Link>
           </li>
         </ul>
       </div>

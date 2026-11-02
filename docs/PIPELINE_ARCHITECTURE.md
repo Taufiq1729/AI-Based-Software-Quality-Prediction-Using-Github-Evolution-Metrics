@@ -69,7 +69,21 @@ Random Forest predicts positive labels at its default decision rule (166 static,
 
 ---
 
-## 5. Remaining Limitations
+## 5. Final Deployed Model and Explainability
+
+All six classifier/feature-set configurations were evaluated; Logistic Regression Combined was selected based on its leading Average Precision and ROC-AUC. The deployed model is `src/models/saved/LogisticRegression_combined.pkl`, used by the API for individual prediction and repository scanning.
+
+`python src/models/explain.py` generates the Logistic Regression Combined signed/absolute coefficient CSV and positive-class SHAP outputs in `data/results/`. SHAP uses `shap.LinearExplainer` and reports contributions in decision-function (log-odds) space. Its background and explained sample are standardized, ordered 15-feature rows, matching the exact representation consumed by training, evaluation, and deployed inference; generated metadata records the model hash, class, feature order, seed, and additivity/probability validation results. Coefficient signs and magnitudes describe the fitted model per standardized feature unit and are not causal contributions.
+
+The generic legacy `feature_importance.csv`, `shap_values.npy`, `shap_base_values.npy`, and `shap_X_sample.csv` are retained as Random Forest Combined experimental artifacts. They are not consumed as explanations of Logistic Regression. The dashboard and `/feature-importance` endpoint use the explicitly named Logistic Regression Combined artifacts.
+
+**Inference preprocessing:** The API accepts the raw ordered 15-feature schema, applies the saved training medians to any missing values, then applies the persisted training `StandardScaler` before calling the selected model. Both individual prediction and repository scanning use this same path. SHAP is computed over the standardized sample/background data consumed by the classifier. The UI presents the positive-class model output as an uncalibrated 0–1 score; its `HIGH`/`LOW` category is only the configured 0.5 threshold, not a defect confirmation.
+
+Run `python src/models/prediction_audit.py` to reproduce the held-out results, produce descriptive calibration bins/reliability output, measure ranking at selected K values, and inspect feature-range shifts and coefficient contributions on the saved Java Design Patterns feature snapshot. The audit does not fit a calibrator. Its external-repository snapshot has no independently verified defect labels, so it cannot validate live-repository accuracy.
+
+---
+
+## 6. Remaining Limitations
 
 1. **Imbalanced temporal test data**: Only 25/2,572 test rows are positive; the 2020 release has none. Model accuracy is lower than the majority baseline.
 2. **Anonymous class records**: 1,837 retained records use synthetic `$n` names and cannot receive a stable source-level FQCN. Their relationship metrics use only relationships that resolve to named source declarations.
@@ -77,5 +91,6 @@ Random Forest predicts positive labels at its default decision rule (166 static,
 4. **File/class granularity**: Repository scanning returns one row per Java file and selects a primary class, whereas benchmark records can refer to nested classes.
 5. **Java parser boundary**: `javalang 0.13.0` rejects records, text blocks, modules, sealed classes, pattern `instanceof`, and switch expressions; unsupported files may use the approximate regex fallback.
 6. **History depth and author identity**: Shallow clones limit evolution history; Git author aliases are not canonicalized to human identities.
+7. **Class imbalance and external repositories**: The temporal held-out test set is highly imbalanced and may not represent repositories scanned in deployment. Calibrated probability and generalization claims require additional representative evaluation.
 
 **Readiness:** corrected identity metrics and reproducible outputs support controlled follow-up experiments, but the current temporal test set does not support strong predictive-generalization claims.

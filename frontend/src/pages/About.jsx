@@ -1,80 +1,127 @@
-const About = () => {
-  return (
-    <div style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
-      <div className="text-center" style={{ marginBottom: '4rem' }}>
-        <h1 style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>Methodology & Architecture</h1>
-        <p className="text-muted" style={{ maxWidth: '800px', margin: '0 auto', fontSize: '1.2rem', lineHeight: '1.6' }}>
-          An empirical approach to Software Quality Assurance (SQA) utilizing Machine Learning and Multi-Dimensional Code Analysis.
-        </p>
-      </div>
-      
-      <div className="glass-panel" style={{ marginBottom: '3rem' }}>
-        <h2 style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>1. Research Objective</h2>
-        <p className="text-muted" style={{ lineHeight: '1.8', fontSize: '1.1rem' }}>
-          The primary objective of this system is to proactively estimate the quality risk and defect-proneness of software components. 
-          By synthesizing <b>Static Object-Oriented Code Metrics</b> with historical <b>Git Evolution Metrics</b>, the platform empowers 
-          Quality Assurance (QA) teams and developers to optimize code review allocation and testing resources based on quantitative evidence.
-          <br /><br />
-          The underlying models are trained and validated on the <i>"Software Metrics for Software Defects Prediction"</i> dataset 
-          (DOI: 10.6084/m9.figshare.21150994), ensuring robust performance across diverse Java repositories.
-        </p>
-      </div>
+import { Link } from 'react-router-dom';
+import { ArrowRight, GitBranch, Layers3, Search, SlidersHorizontal } from 'lucide-react';
+import './About.css';
 
-      <div className="grid-2" style={{ marginBottom: '3rem' }}>
-        <div className="glass-panel">
-          <h3 style={{ color: '#3b82f6', marginBottom: '1.5rem' }}>2. Static Code Taxonomy</h3>
-          <p className="text-muted" style={{ marginBottom: '1.5rem' }}>
-            Static metrics are extracted directly from the source code's Abstract Syntax Tree (AST), representing structural complexity and object-oriented design cohesion.
-          </p>
-          <ul className="text-muted" style={{ lineHeight: '2.2', paddingLeft: '1.5rem' }}>
-              <li><b>LOC (Lines of Code)</b>: Volumetric measurement of component size.</li>
-              <li><b>WMC (Weighted Methods per Class)</b>: Cyclomatic complexity aggregate.</li>
-              <li><b>DIT (Depth of Inheritance Tree)</b>: Maximum path length from the node to the root of the tree.</li>
-              <li><b>CBO (Coupling Between Objects)</b>: Number of classes to which a class is coupled.</li>
-              <li><b>LCOM5 (Lack of Cohesion in Methods)</b>: Evaluates the relatedness of methods and instance variables.</li>
-              <li><b>RFC (Response For a Class)</b>: The set of methods that can potentially be executed in response to a message.</li>
-          </ul>
-        </div>
-        
-        <div className="glass-panel">
-          <h3 style={{ color: '#d946ef', marginBottom: '1.5rem' }}>3. Git Evolution Taxonomy</h3>
-          <p className="text-muted" style={{ marginBottom: '1.5rem' }}>
-            Evolution metrics (process metrics) are mined from the Version Control System (VCS), capturing the temporal dynamics and human organizational factors of software development.
-          </p>
-          <ul className="text-muted" style={{ lineHeight: '2.2', paddingLeft: '1.5rem' }}>
-              <li><b>Code Churn</b>: The absolute sum of lines added, deleted, and modified. High churn strongly correlates with architectural instability.</li>
-              <li><b>Revision Count</b>: The absolute frequency of historical commits affecting a file, indicating active maintenance or persistent bug fixing.</li>
-              <li><b>Developer Count</b>: The cardinality of distinct authors contributing to a file. High developer count often indicates distributed ownership, which can increase defect risk.</li>
-          </ul>
-        </div>
-      </div>
+const workflow = [
+  'Submit a Git repository URL.',
+  'The backend clones the repository and records its checked-out commit.',
+  'Java source files are discovered and parsed; parser and analysis failures are retained as diagnostics.',
+  'Twelve static code metrics are extracted from each supported primary file-level class.',
+  'Git history is mined for code churn, revision count and developer count.',
+  'The scanner assembles the ordered 15-feature vector for each file-level result.',
+  'Training-time feature medians fill missing values, then the saved StandardScaler transforms the vector.',
+  'Combined Logistic Regression produces a score for the positive (defective) class.',
+  'Files are sorted by model score; additional and nested classes are not scored independently.',
+  'The dashboard presents the repository summary, diagnostics, ranked files and extracted metrics.',
+];
 
-      <div className="glass-panel">
-        <h2 style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>4. Core Research Questions (RQs)</h2>
-        <p className="text-muted" style={{ marginBottom: '1.5rem' }}>
-          The architecture of this platform is designed to answer four fundamental research questions regarding software quality prediction:
-        </p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div style={{ padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', borderLeft: '4px solid #8b5cf6' }}>
-            <b style={{ color: '#f8fafc', fontSize: '1.1rem' }}>RQ1: Hypothesis Validation</b>
-            <p className="text-muted" style={{ marginTop: '0.5rem', margin: 0 }}>Does the integration of evolution/process metrics with static code metrics yield a statistically significant improvement in defect-proneness prediction accuracy?</p>
-          </div>
-          <div style={{ padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', borderLeft: '4px solid #8b5cf6' }}>
-            <b style={{ color: '#f8fafc', fontSize: '1.1rem' }}>RQ2: Feature Importance</b>
-            <p className="text-muted" style={{ marginTop: '0.5rem', margin: 0 }}>Which individual metrics—structural or temporal—exhibit the highest information gain when classifying defect-prone components?</p>
-          </div>
-          <div style={{ padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', borderLeft: '4px solid #8b5cf6' }}>
-            <b style={{ color: '#f8fafc', fontSize: '1.1rem' }}>RQ3: Algorithmic Efficacy</b>
-            <p className="text-muted" style={{ marginTop: '0.5rem', margin: 0 }}>Among standard classifiers (Logistic Regression, Decision Trees, Random Forests), which algorithm achieves the optimal balance of Precision, Recall, and Area Under the ROC Curve (AUC)?</p>
-          </div>
-          <div style={{ padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', borderLeft: '4px solid #8b5cf6' }}>
-            <b style={{ color: '#f8fafc', fontSize: '1.1rem' }}>RQ4: Model Explainability</b>
-            <p className="text-muted" style={{ marginTop: '0.5rem', margin: 0 }}>To what extent can explainable AI techniques (e.g., SHAP values) provide actionable, human-interpretable insights for QA teams regarding why a specific file was flagged?</p>
-          </div>
+const staticFeatures = ['LOC', 'WMC', 'DIT', 'NOC', 'RFC', 'LCOM5', 'CBO', 'NPA', 'NPM', 'NLE', 'CBOI', 'CD'];
+const evolutionFeatures = ['code_churn', 'revision_count', 'developer_count'];
+
+const About = () => (
+  <main className="research-page">
+    <header className="research-header">
+      <p className="eyebrow">Research workflow</p>
+      <h1>How repository analysis works</h1>
+      <p className="text-muted">
+        SQAM combines source-level structure and repository history to estimate which Java files
+        may merit earlier manual inspection.
+      </p>
+    </header>
+
+    <section className="workflow-grid" aria-label="Repository scanning workflow">
+      {workflow.map((step, index) => (
+        <article className="glass-panel workflow-step" key={step}>
+          <span className="workflow-index">{String(index + 1).padStart(2, '0')}</span>
+          <p>{step}</p>
+        </article>
+      ))}
+    </section>
+
+    <section className="grid-2 research-section">
+      <article className="glass-panel">
+        <div className="section-title">
+          <Layers3 aria-hidden="true" />
+          <h2>Feature configurations</h2>
         </div>
-      </div>
+        <p className="text-muted">
+          Static-only models use the 12 source metrics. Combined models use all 12 static and all
+          3 Git evolution metrics. Repository scans and the deployed model use all 15 features.
+        </p>
+        <h3>Static code metrics</h3>
+        <p className="feature-list">{staticFeatures.join(' · ')}</p>
+        <h3>Git evolution metrics</h3>
+        <p className="feature-list">{evolutionFeatures.join(' · ')}</p>
+        <p className="text-muted">
+          The API preserves this ordered 15-feature schema; the manual input page is not part of
+          the primary workflow.
+        </p>
+      </article>
+
+      <article className="glass-panel">
+        <div className="section-title">
+          <GitBranch aria-hidden="true" />
+          <h2>Models and selection</h2>
+        </div>
+        <p className="text-muted">
+          Three classifier families were evaluated with each feature configuration: Logistic
+          Regression, Decision Tree and Random Forest. That yields six experimental configurations.
+        </p>
+        <p className="text-muted">
+          Combined Logistic Regression was selected for deployment based on the recorded
+          experimental ranking metrics. It is the model loaded for repository scans. This is a
+          model-selection result, not evidence that predictions are calibrated or that detected
+          files contain defects.
+        </p>
+        <div className="method-note">
+          <strong>Preprocessing is shared with training.</strong>
+          <span>Missing values use saved training medians; the saved StandardScaler is applied in the recorded feature order.</span>
+        </div>
+      </article>
+    </section>
+
+    <section className="grid-2 research-section">
+      <article className="glass-panel">
+        <div className="section-title">
+          <SlidersHorizontal aria-hidden="true" />
+          <h2>Evaluation methodology</h2>
+        </div>
+        <p className="text-muted">
+          The reported holdout is release-based and chronological: training and test rows are
+          separated by release, and preprocessing is fitted on training data. Average Precision is
+          the primary precision-recall ranking metric; ROC-AUC, precision, recall, F1 and confusion
+          matrices are also reported. See Analytics for the recorded values and curves.
+        </p>
+        <p className="text-muted">
+          The deployed model’s held-out test contains 2,572 components, including 25 labeled
+          defective components. The class imbalance makes accuracy alone unsuitable as a measure
+          of defect detection.
+        </p>
+      </article>
+
+      <article className="glass-panel">
+        <div className="section-title">
+          <Search aria-hidden="true" />
+          <h2>Interpreting scan results</h2>
+        </div>
+        <p className="text-muted">
+          Each result represents one primary class/file-level analysis. Additional or nested
+          declarations are not given independent predictions. Diagnostics identify parser failures,
+          files without resolved identities and unresolved project references.
+        </p>
+        <p className="score-disclaimer">
+          These scores represent the model&apos;s estimates based on source-code metrics and Git
+          history. They help prioritize manual inspection and do not confirm the presence of defects.
+        </p>
+      </article>
+    </section>
+
+    <div className="research-cta">
+      <Link to="/scanner" className="btn-primary scan-cta">
+        <Search size={18} /> Scan a repository <ArrowRight size={18} />
+      </Link>
     </div>
-  );
-};
+  </main>
+);
 
 export default About;

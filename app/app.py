@@ -8,6 +8,7 @@ import shap
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.express as px
+from src.data.feature_extractor import FEATURE_COLUMNS
 
 # Must be the first Streamlit command
 st.set_page_config(page_title="AI Software Quality Prediction", page_icon="🔮", layout="wide", initial_sidebar_state="collapsed")
@@ -129,7 +130,10 @@ def load_data():
     else:
         metrics = None
         
-    importance_path = os.path.join(results_dir, "feature_importance.csv")
+    importance_path = os.path.join(
+        results_dir,
+        "logistic_regression_combined_feature_coefficients.csv",
+    )
     if os.path.exists(importance_path):
         feature_importance = pd.read_csv(importance_path)
     else:
@@ -267,42 +271,87 @@ with tab2:
 
 with tab3:
     if feature_importance is not None:
-        st.markdown("<div class='glass-card'><h2>Explainability & Feature Importance</h2><p>Identifying which metrics drive the defect predictions (using Logistic Regression).</p></div>", unsafe_allow_html=True)
+        st.markdown(
+            "<div class='glass-card'><h2>Logistic Regression Combined Explainability</h2>"
+            "<p>Signed coefficients describe model direction; absolute magnitudes are scale-dependent "
+            "and are not causal contributions.</p></div>",
+            unsafe_allow_html=True,
+        )
         
         col1, col2 = st.columns([1, 1.2])
         
         with col1:
             st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
-            fig_fi = px.bar(feature_importance.head(10).sort_values('Importance', ascending=True), 
-                            x="Importance", y="Feature", orientation='h',
-                            color="Importance", color_continuous_scale="Purp")
+            top_coefficients = feature_importance.nlargest(10, "Absolute_Coefficient")
+            fig_fi = px.bar(
+                top_coefficients.sort_values("Absolute_Coefficient", ascending=True),
+                x="Absolute_Coefficient",
+                y="Feature",
+                orientation="h",
+                color="Signed_Coefficient",
+                color_continuous_scale="RdBu",
+                color_continuous_midpoint=0,
+                hover_data={"Signed_Coefficient": ":.6g", "Absolute_Coefficient": ":.6g"},
+            )
             fig_fi.update_layout(
                 plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', font=dict(color='#cbd5e1'),
-                title="Top 10 Most Influential Metrics", showlegend=False, margin=dict(l=0, r=0, t=40, b=0)
+                title="Top 10 Logistic Regression Coefficient Magnitudes",
+                xaxis_title="Absolute coefficient (not causal influence)",
+                showlegend=False, margin=dict(l=0, r=0, t=40, b=0)
             )
             st.plotly_chart(fig_fi, use_container_width=True)
             st.markdown("</div>", unsafe_allow_html=True)
             
         with col2:
             st.markdown("<div class='glass-card' style='text-align: center; overflow: hidden;'>", unsafe_allow_html=True)
-            st.markdown("### SHAP Summary Plot")
-            st.markdown("<p style='color: #94a3b8; font-size: 0.9rem;'>Shows directionality. Red = High value, Blue = Low value.</p>", unsafe_allow_html=True)
+            st.markdown("### Logistic Regression Combined SHAP Summary")
+            st.markdown(
+                "<p style='color: #94a3b8; font-size: 0.9rem;'>"
+                "Positive-class (defective = 1) contributions in log-odds space. "
+                "Feature values are standardized; red = above the training mean, "
+                "blue = below the training mean.</p>",
+                unsafe_allow_html=True,
+            )
             
             results_dir = "data/results"
-            shap_values_path = os.path.join(results_dir, "shap_values.npy")
-            shap_sample_path = os.path.join(results_dir, "shap_X_sample.csv")
+            shap_values_path = os.path.join(
+                results_dir,
+                "logistic_regression_combined_shap_values.npy",
+            )
+            shap_sample_path = os.path.join(
+                results_dir,
+                "logistic_regression_combined_shap_X_sample.csv",
+            )
             
             if os.path.exists(shap_values_path) and os.path.exists(shap_sample_path):
                 shap_values = np.load(shap_values_path)
                 X_sample = pd.read_csv(shap_sample_path)
-                
-                # We have to style matplotlib for dark theme
-                plt.style.use('dark_background')
-                fig, ax = plt.subplots(figsize=(7, 5))
-                fig.patch.set_facecolor('none')
-                ax.set_facecolor('none')
-                shap.summary_plot(shap_values, X_sample, show=False, plot_size=(7, 5))
-                st.pyplot(fig)
+                metadata_path = os.path.join(
+                    results_dir,
+                    "logistic_regression_combined_explanation_metadata.json",
+                )
+                if (
+                    list(X_sample.columns) != FEATURE_COLUMNS
+                    or shap_values.shape != X_sample.shape
+                    or not os.path.exists(metadata_path)
+                ):
+                    st.error("Logistic Regression SHAP artifacts are incomplete or have an invalid feature schema.")
+                else:
+                    with open(metadata_path, "r", encoding="utf-8") as file:
+                        explanation_metadata = json.load(file)
+                    if (
+                        explanation_metadata.get("model_file") != "LogisticRegression_combined.pkl"
+                        or explanation_metadata.get("feature_columns") != FEATURE_COLUMNS
+                        or explanation_metadata.get("positive_class") != 1
+                    ):
+                        st.error("SHAP metadata does not identify Logistic Regression Combined class 1.")
+                    else:
+                        plt.style.use('dark_background')
+                        fig, ax = plt.subplots(figsize=(7, 5))
+                        fig.patch.set_facecolor('none')
+                        ax.set_facecolor('none')
+                        shap.summary_plot(shap_values, X_sample, show=False, plot_size=(7, 5))
+                        st.pyplot(fig)
             else:
                 st.info("SHAP values not generated yet.")
             st.markdown("</div>", unsafe_allow_html=True)
@@ -310,7 +359,12 @@ with tab3:
         st.warning("Feature importance data not found.")
 
 with tab4:
-    st.markdown("<div class='glass-card'><h2>SQA Interactive Predictor</h2><p>Simulate a Java component to test its defect probability.</p></div>", unsafe_allow_html=True)
+    st.markdown(
+        "<div class='glass-card'><h2>SQA Interactive Predictor</h2>"
+        "<p>Explore an uncalibrated model score for a hypothetical Java component. "
+        "Scores prioritize manual review; they do not confirm or rule out defects.</p></div>",
+        unsafe_allow_html=True,
+    )
     
     with st.container():
         st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
@@ -348,43 +402,48 @@ with tab4:
     if predict_btn:
         model_path = "src/models/saved/LogisticRegression_combined.pkl"
         scaler_path = "data/processed/scaler.pkl"
+        medians_path = "data/processed/imputer_medians.json"
         
-        if os.path.exists(model_path) and os.path.exists(scaler_path):
+        if os.path.exists(model_path) and os.path.exists(scaler_path) and os.path.exists(medians_path):
             try:
                 model = joblib.load(model_path)
                 scaler = joblib.load(scaler_path)
-                
-                X_train = pd.read_csv("data/processed/X_train.csv")
-                cols = X_train.columns
+                with open(medians_path, "r", encoding="utf-8") as medians_file:
+                    medians = json.load(medians_file)
                 
                 input_data = {
-                    'WMC': wmc, 'DIT': dit, 'NOC': noc, 'CBO': cbo, 'RFC': rfc, 
-                    'LCOM5': lcom, 'NPA': npa, 'NPM': npm, 'NLE': nle, 'CBOI': cboi, 
-                    'CD': cd, 'LOC': loc, 'code_churn': churn, 
+                    'LOC': loc, 'WMC': wmc, 'DIT': dit, 'NOC': noc, 'RFC': rfc,
+                    'LCOM5': lcom, 'CBO': cbo, 'NPA': npa, 'NPM': npm, 'NLE': nle,
+                    'CBOI': cboi, 'CD': cd, 'code_churn': churn,
                     'revision_count': revisions, 'developer_count': devs
                 }
                 
-                input_df = pd.DataFrame([input_data])[cols]
-                input_scaled = scaler.transform(input_df)
-                
-                prob = model.predict_proba(input_scaled)[0][1]
-                pred = int(prob > 0.5)
+                input_df = pd.DataFrame([input_data], columns=FEATURE_COLUMNS)
+                input_df = input_df.fillna(medians)
+                scaled_df = pd.DataFrame(
+                    scaler.transform(input_df),
+                    columns=FEATURE_COLUMNS,
+                )
+                positive_class_index = list(model.classes_).index(1)
+                prob = model.predict_proba(scaled_df)[0][positive_class_index]
+                pred = int(model.predict(scaled_df)[0])
+                score_display = "<0.001" if 0 < prob < 0.001 else f"{prob:.3f}"
                 
                 if pred == 1:
                     bg_color = "rgba(239, 68, 68, 0.2)"
                     border_color = "#ef4444"
-                    status = "⚠️ HIGH RISK"
-                    msg = "This component is highly likely to contain defects and should be prioritized for review."
+                    status = "⚠️ HIGH MODEL SCORE"
+                    msg = "The score exceeds the configured review threshold. Consider manual review."
                 else:
                     bg_color = "rgba(34, 197, 94, 0.2)"
                     border_color = "#22c55e"
-                    status = "✅ LOW RISK"
-                    msg = "This component appears stable."
+                    status = "✅ LOWER MODEL SCORE"
+                    msg = "The score is below the configured review threshold; this does not establish that the component is defect-free."
                     
                 st.markdown(f"""
                 <div class="glass-card" style="background: {bg_color}; border-color: {border_color}; text-align: center; margin-top: 20px;">
                     <h2 style="color: {border_color}; font-size: 2.5rem; margin-bottom: 10px;">{status}</h2>
-                    <div style="font-size: 4rem; font-weight: 800; color: white; margin-bottom: 10px;">{prob:.1%}</div>
+                    <div style="font-size: 4rem; font-weight: 800; color: white; margin-bottom: 10px;">Model score (0–1): {score_display}</div>
                     <p style="font-size: 1.2rem; color: #cbd5e1;">{msg}</p>
                 </div>
                 """, unsafe_allow_html=True)
@@ -392,4 +451,4 @@ with tab4:
             except Exception as e:
                 st.error(f"Error making prediction: {e}")
         else:
-            st.error("Model or scaler not found. Please train the models first.")
+            st.error("Logistic Regression Combined model, training scaler, or imputation medians were not found.")

@@ -3,6 +3,8 @@
 **Date:** 2026-10-30  
 **Result:** Live frontend-to-API scans succeeded for two public repositories. Edge-case responses were also exercised against the live API. This validates the tested Java scans, not all Java syntax or every possible repository.
 
+**Historical model note:** This report records a pre-update integration run that loaded Random Forest Combined with scaling/imputation. It is not evidence for the current Logistic Regression Combined deployment or its explanations. Current API behavior is documented in the README and pipeline architecture.
+
 ## Live Application
 
 - Frontend: `http://127.0.0.1:5173/scanner`

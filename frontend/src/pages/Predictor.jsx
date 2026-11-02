@@ -35,7 +35,10 @@ const Predictor = () => {
     <div className="predictor-container">
       <div className="glass-panel text-center" style={{ marginBottom: '2rem' }}>
         <h2>SQA Interactive Predictor</h2>
-        <p className="text-muted">Simulate a Java component to test its defect probability using our tuned Random Forest Model.</p>
+        <p className="text-muted">
+          Explore the Logistic Regression Combined model score for a hypothetical Java component.
+          Scores are uncalibrated estimates, not verified defect probabilities.
+        </p>
       </div>
 
       <div className="grid-2">
@@ -89,12 +92,17 @@ const Predictor = () => {
           {result && (
             <div className={`glass-panel result-card ${result.risk_level === 'HIGH' ? 'risk-high' : 'risk-low'}`}>
               {result.risk_level === 'HIGH' ? <AlertTriangle size={48} /> : <CheckCircle2 size={48} />}
-              <h2>{result.risk_level} RISK</h2>
-              <div className="probability">{(result.probability * 100).toFixed(1)}%</div>
+              <h2>{result.risk_level === 'HIGH' ? 'HIGH MODEL SCORE' : 'LOWER MODEL SCORE'}</h2>
+              <div className="probability">
+                Model score (0–1): {result.model_score.toFixed(3)}
+              </div>
               <p>
                 {result.risk_level === 'HIGH' 
-                  ? 'This component is highly likely to contain defects. Prioritize for review.' 
-                  : 'This component appears stable.'}
+                  ? 'The model score exceeds the configured review threshold. Consider prioritizing manual review.'
+                  : 'The model score is below the configured review threshold; this does not establish that the component is defect-free.'}
+              </p>
+              <p className="text-muted">
+                Uncalibrated model estimate. This score does not confirm or rule out defects.
               </p>
             </div>
           )}

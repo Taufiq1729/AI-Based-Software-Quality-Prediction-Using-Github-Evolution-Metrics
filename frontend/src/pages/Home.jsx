@@ -1,43 +1,47 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, ShieldCheck, GitCommit, FileCode2 } from 'lucide-react';
+import { ArrowRight, GitBranch, FileCode2, ScanSearch } from 'lucide-react';
 import './Home.css';
 
 const Home = () => {
   return (
     <div className="home-container">
-      <div className="hero-section text-center">
+      <section className="hero-section">
+        <p className="eyebrow">Software quality research · Java repositories</p>
         <h1 className="hero-title">
-          Empowering SQA with <span className="text-gradient">AI & Git Evolution</span>
+          Understand quality signals across <span className="text-gradient">code and change history</span>
         </h1>
         <p className="hero-subtitle text-muted">
-          Predict software component defect-proneness by combining static code complexity metrics 
-          with historical Git repository evolution data.
+          SQAM analyzes Java source and its Git history, then ranks files with a research-selected
+          machine-learning model to help guide manual inspection.
         </p>
         <div className="hero-cta">
-          <Link to="/predictor" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', width: 'auto' }}>
-            Try the Predictor <ArrowRight size={20} />
+          <Link to="/scanner" className="btn-primary scan-cta">
+            <ScanSearch size={20} /> Scan a repository <ArrowRight size={18} />
           </Link>
-          <Link to="/about" className="btn-secondary">
-            Learn How It Works
+          <Link to="/how-it-works" className="btn-secondary">
+            Explore the methodology
           </Link>
         </div>
-      </div>
+        <p className="hero-disclaimer text-muted">
+          Model-estimated scores prioritize review; they do not confirm defects or represent calibrated probabilities.
+        </p>
+      </section>
 
       <div className="features-grid grid-3">
         <div className="glass-panel feature-card">
           <FileCode2 size={40} className="feature-icon static-icon" />
-          <h3>Static Code Analysis</h3>
-          <p className="text-muted">Analyzes 12 structural metrics like Lines of Code, Cyclomatic Complexity, and Coupling.</p>
+          <h3>12 static metrics</h3>
+          <p className="text-muted">Measures Java source structure, complexity, cohesion, inheritance and coupling.</p>
         </div>
         <div className="glass-panel feature-card">
-          <GitCommit size={40} className="feature-icon git-icon" />
-          <h3>Git Evolution Metrics</h3>
-          <p className="text-muted">Tracks how the code changes over time using Code Churn, Revision Count, and Developer Count.</p>
+          <GitBranch size={40} className="feature-icon git-icon" />
+          <h3>3 evolution metrics</h3>
+          <p className="text-muted">Mines code churn, revision count and developer count from repository history.</p>
         </div>
         <div className="glass-panel feature-card">
-          <ShieldCheck size={40} className="feature-icon ai-icon" />
-          <h3>AI-Driven Quality</h3>
-          <p className="text-muted">Uses Random Forest models to pinpoint high-risk components for targeted QA and testing.</p>
+          <ScanSearch size={40} className="feature-icon ai-icon" />
+          <h3>File-level prioritization</h3>
+          <p className="text-muted">Applies the selected Combined Logistic Regression model to all 15 extracted features.</p>
         </div>
       </div>
     </div>

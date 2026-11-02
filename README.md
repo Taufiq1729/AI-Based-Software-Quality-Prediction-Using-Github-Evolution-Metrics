@@ -1,6 +1,6 @@
 # AI-Based Software Quality Prediction Using GitHub Evolution Metrics
 
-**SQAM Analytics Engine** is a research prototype that estimates the defect risk of Java source files by combining static source-code metrics with Git-based software evolution metrics.
+**SQAM Analytics Engine** is a research prototype that analyzes Java repositories with static source-code metrics and Git-based software evolution metrics, then ranks file-level model estimates to help prioritize manual review. Scores do not confirm defects and are not calibrated defect probabilities.
 
 The project investigates whether information about a file's development history—such as code churn, revision frequency, and contributor count—adds predictive value beyond measurements of the source code itself. It includes a reproducible machine-learning workflow, model evaluation and explainability artifacts, a FastAPI backend, and a React/Vite frontend for repository-level analysis.
 
@@ -109,16 +109,25 @@ These results show a relative improvement from adding evolution features, but th
 
 The evaluation pipeline also records accuracy, balanced accuracy, precision, recall, F1-score, confusion matrices, ROC curve coordinates, precision-recall curve coordinates, and per-release results in `data/results/evaluation_metrics.json`.
 
+**Final model:** all six classifier/configuration combinations (three classifiers, each with static-only and combined features) were trained and evaluated. **Logistic Regression Combined** was selected as the final model and is saved as `src/models/saved/LogisticRegression_combined.pkl`. Its reported held-out results are AP 0.02758, ROC-AUC 0.78898, precision 0.02443, recall 0.56, and F1-score 0.04682. The FastAPI individual-prediction and repository-scanning endpoints both load this same model.
+
 ---
 
 ## Explainability
 
-The project includes:
+Feature-importance coefficients and SHAP explanations are generated specifically for **Logistic Regression Combined**, the final model used by both API prediction and repository scanning. Run:
 
-- Random Forest feature-importance output.
-- SHAP values and a corresponding sample of feature rows.
+```bash
+python src/models/explain.py
+```
 
-**Artifact/model alignment:** The currently saved feature-importance and SHAP artifacts explain the **Random Forest combined** model. They should not be presented as explanations of the Logistic Regression model. If explanations are required for the Logistic Regression model used by the scanner, generate a new explanation artifact specifically for that model.
+The model-specific outputs in `data/results/` are:
+
+- `logistic_regression_combined_feature_coefficients.csv` — signed learned coefficients and absolute coefficient magnitudes, in the authoritative 15-feature order. Coefficients describe model behavior, not causal contributions; magnitudes depend on input scale.
+- `logistic_regression_combined_shap_values.npy`, `logistic_regression_combined_shap_X_sample.csv`, and `logistic_regression_combined_shap_base_values.npy` — class-1 SHAP values, their standardized model-input rows, and the log-odds base value.
+- `logistic_regression_combined_shap_background.csv` and `logistic_regression_combined_explanation_metadata.json` — the reproducible SHAP background rows and model identity, feature order, output space, and validation results.
+
+The previous generic `feature_importance.csv`, `shap_values.npy`, `shap_X_sample.csv`, and `shap_base_values.npy` files are retained as supplementary **Random Forest Combined** experiment outputs. They are not consumed by the Logistic Regression dashboard or `/feature-importance` endpoint and must not be described as explanations of Logistic Regression.
 
 ---
 
@@ -128,7 +137,7 @@ The FastAPI application provides endpoints for metric-based prediction and Java 
 
 ### Repository scanning
 
-The `/scan-repo` endpoint accepts a Git repository URL, clones the repository, identifies Java source files, extracts the shared feature set, and returns file-level defect-risk scores.
+The `/scan-repo` endpoint accepts a Git repository URL, clones the repository, identifies Java source files, extracts the shared feature set, and returns ranked file-level model scores, commit identity, extraction counts, and diagnostics. Each result is one primary file-level prediction; additional and nested classes are not scored independently.
 
 The scanning workflow is intended to:
 
@@ -136,15 +145,20 @@ The scanning workflow is intended to:
 2. Identify `.java` source files.
 3. Build repository context and extract the 12 static metrics.
 4. Mine Git history for `code_churn`, `revision_count`, and `developer_count`.
-5. Arrange the extracted values in the exact 15-feature schema.
-6. Apply the currently configured combined Logistic Regression model.
-7. Return file-level risk probabilities and risk labels, with higher-risk files prioritized in the response.
+5. Arrange the extracted values in the exact 15-feature schema, fill missing values with the saved training medians, and apply the saved training `StandardScaler`.
+6. Apply the combined Logistic Regression model to the standardized feature rows.
+7. Rank successfully scored files by descending class-1 score. Exact score ties are ordered by case-insensitive file path, then exact file path; tied files share a relative-priority tier. Ranking and priority tiers are review aids, not absolute defect-risk categories.
+8. Return `rank`, `priority`, `score_tie_count`, the original file path, all 15 metrics, and the total counts for discovered, analyzed, scored and returned files. By default the API keeps its top-50 response limit for compatibility; pass `?limit=10`, `20`, or `50` to choose a result cap, or `?limit=0` to return all successfully scored files. The frontend requests all ranked files so its Top 10/20/50/All, search and sorting controls apply to the complete scan.
 
-The current scanner is Java-only because the feature extractor and training data are Java-specific. Risk scores are estimates from the trained model and should be used to help prioritize manual review, not interpreted as confirmed defects.
+The relative-priority rule labels rank 1 (and any files tied with it) **Highest priority**. Remaining score-tie groups are assigned by their midpoint position in the complete ranking: top quartile **High relative priority**, middle half **Medium relative priority**, final quartile **Lower relative priority**. Equal scores do not indicate meaningfully different model estimates.
+
+The legacy `risk_probability` and `risk_level` response fields remain for compatibility; the score is uncalibrated and the label is the model's default binary prediction, not a validated repository risk category.
+
+The current scanner is Java-only because the feature extractor and training data are Java-specific. Scores are estimates from the trained model and should be used to help prioritize manual review, not interpreted as confirmed defects.
 
 ### Prediction endpoint
 
-The `/predict` endpoint accepts the model's required static and evolution metrics and returns a prediction and probability. The current API uses a probability threshold of `0.5` to map the score to its `HIGH` or `LOW` risk label. This is the configured application threshold; it is not a threshold optimized on the held-out test set.
+The `/predict` endpoint remains available for internal testing and accepts the model's raw static and evolution metrics, applies the saved training median imputation and `StandardScaler`, and returns a prediction and model score. Repository scanning uses the same preprocessing, model, and positive-class output. Its legacy `risk_level` field reflects the classifier's default 0.5 decision threshold; it is not a risk-severity classification and was not optimized on the held-out test set. The primary frontend navigation focuses on Home, How It Works, Analytics and Repository Scanner. The manual predictor remains reachable directly at `/predictor` for developer experimentation and is not part of the repository-scanning journey.
 
 Example request body:
 
@@ -174,11 +188,19 @@ Example response shape:
 {
   "prediction": 0,
   "probability": 0.32,
-  "risk_level": "LOW"
+  "model_score": 0.32,
+  "risk_level": "LOW",
+  "probability_interpretation": "uncalibrated_model_estimate"
 }
 ```
 
-The values above are illustrative request/response examples, not measured results.
+The values above are illustrative request/response examples, not measured results. `probability` is retained for API compatibility; use `model_score` and the interpretation field, and do not read this output as a calibrated probability.
+
+### Prediction-score audit
+
+Run `python src/models/prediction_audit.py` to reproduce held-out metrics, examine score calibration descriptively, calculate held-out top-K ranking results, and inspect feature distributions and model contributions for the saved Java Design Patterns feature snapshot. Outputs are written to `data/results/prediction_audit*`. The snapshot's stored legacy scores were generated by the model named in its metadata; audit scores are recalculated with Logistic Regression Combined and do not represent a new live scan.
+
+The audit does not fit a calibrator or claim that predictions on an external repository are correct: no independently labeled external repository scan is available. See the [prediction-score audit](./docs/FINAL_VALIDATION_AUDIT.md#prediction-score-audit) for the recorded findings and limitations.
 
 ---
 
@@ -315,7 +337,7 @@ data/processed/
 └── y_test.csv
 ```
 
-The exact files generated depend on the preprocessing script. The current `train.py` and `evaluate.py` workflows consume these feature and label CSVs. They pass the resulting feature matrices directly to the models; do not add an external scaler or imputer at evaluation time unless the training and evaluation implementation is deliberately changed to use one consistently.
+The preprocessing script imputes using training medians and standardizes `X_train.csv` and `X_test.csv`; the training and evaluation scripts pass these standardized matrices directly to the classifiers. The API accepts raw ordered feature values, validates them, and applies the saved training scaler before prediction. The explainability generator uses the same standardized model-input representation as training, evaluation, and inference. Do not feed unscaled raw feature values directly to the saved classifier.
 
 ### Step 4 — Train models
 
@@ -382,6 +404,7 @@ http://127.0.0.1:8000/docs
 |---|---|---|
 | `GET` | `/` | API welcome/status |
 | `GET` | `/evaluation` | Retrieve evaluation metrics |
+| `GET` | `/prediction-audit` | Retrieve prediction calibration and saved-repository feature-range audit summaries |
 | `GET` | `/feature-importance` | Retrieve feature-importance data |
 | `POST` | `/predict` | Predict risk from supplied metrics |
 | `POST` | `/scan-repo` | Scan a Git repository and return Java file-level risk estimates |
@@ -407,6 +430,7 @@ http://localhost:5173
 ```
 
 The FastAPI backend must also be running if the frontend is configured to call the local API.
+The frontend defaults to `http://localhost:8000`; set `VITE_API_BASE_URL` before `npm run dev` or `npm run build` if the API is hosted elsewhere.
 
 ### Production build
 
