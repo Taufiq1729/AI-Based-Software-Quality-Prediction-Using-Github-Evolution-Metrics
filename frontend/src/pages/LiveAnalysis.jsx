@@ -50,15 +50,19 @@ const LiveAnalysis = () => {
 
         if (data.status === 'completed') {
           setPolling(false);
+          if (interval) clearInterval(interval);
           await fetchScanResults(currentTaskId);
         } else if (data.status === 'failed') {
           setPolling(false);
+          if (interval) clearInterval(interval);
           setError(data.error || 'Scan failed.');
         }
       } catch (err) {
         console.error('Error polling status:', err);
-        setError('Error connecting to backend server.');
+        const detail = err.response?.data?.detail;
+        setError(detail || 'Scan task not found or server restarted. Please start a new scan.');
         setPolling(false);
+        if (interval) clearInterval(interval);
       }
     };
 

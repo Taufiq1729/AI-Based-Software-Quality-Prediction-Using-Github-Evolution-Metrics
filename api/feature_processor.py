@@ -5,8 +5,8 @@ import numpy as np
 from typing import List, Dict, Any, Tuple
 
 STATIC_FEATURES = [
-    'WMC', 'DIT', 'NOC', 'CBO', 'RFC', 'LCOM5',
-    'NPA', 'NPM', 'NLE', 'CBOI', 'CD', 'LOC'
+    'LOC', 'WMC', 'DIT', 'NOC', 'RFC', 'LCOM5',
+    'CBO', 'NPA', 'NPM', 'NLE', 'CBOI', 'CD'
 ]
 
 EVOLUTION_FEATURES = [
@@ -27,9 +27,14 @@ class FeatureProcessor:
         self._load_scaler()
 
     def _load_scaler(self):
+        global ALL_FEATURES, STATIC_FEATURES
         if os.path.exists(self.scaler_path):
             try:
                 self.scaler = joblib.load(self.scaler_path)
+                if hasattr(self.scaler, "feature_names_in_"):
+                    # Dynamically ensure exact alignment with fitted scaler
+                    ALL_FEATURES = list(self.scaler.feature_names_in_)
+                    STATIC_FEATURES = [f for f in ALL_FEATURES if f not in EVOLUTION_FEATURES]
             except Exception as e:
                 print(f"Warning: Failed to load scaler from {self.scaler_path}: {e}")
         else:
@@ -63,13 +68,13 @@ class FeatureProcessor:
     def transform_static(self, df_raw: pd.DataFrame) -> pd.DataFrame:
         """
         Scales the 12 static features. Since scaler was fitted on 15 features,
-        we transform all 15 features and extract the first 12 static columns.
+        we transform all 15 features and extract the static columns.
         """
         if self.scaler is None:
             raise RuntimeError("StandardScaler is not loaded.")
         
         df_ordered = df_raw[ALL_FEATURES]
         scaled_array = self.scaler.transform(df_ordered)
-        static_scaled = scaled_array[:, :len(STATIC_FEATURES)]
-        return pd.DataFrame(static_scaled, columns=STATIC_FEATURES, index=df_raw.index)
+        scaled_df = pd.DataFrame(scaled_array, columns=ALL_FEATURES, index=df_raw.index)
+        return scaled_df[STATIC_FEATURES]
 
