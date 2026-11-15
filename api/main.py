@@ -1,5 +1,5 @@
 """
-FastAPI Backend API for SQAM Analytics Engine.
+FastAPI Backend API for SQAM Analytics Engine & CodeQuality AI.
 Provides real-time defect risk prediction and real repository scanning using:
 - Real Java AST analysis (12 OO static metrics)
 - Real Git history evolution mining (churn, revisions, developers)
@@ -12,14 +12,19 @@ import json
 import shutil
 import tempfile
 import logging
+import uuid
+import time
+import io
+import csv
 from typing import Any, Dict, List, Optional
 import git
 import joblib
 import numpy as np
 import pandas as pd
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, BackgroundTasks, Response
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, HttpUrl
+from fastapi.responses import StreamingResponse
+from pydantic import BaseModel, HttpUrl, Field
 
 # Ensure project root is in sys.path
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -33,13 +38,20 @@ from src.data.feature_extractor import (
     validate_feature_vector,
     extract_repository_features
 )
+from api.github_service import GitHubService
+from api.java_analyzer import JavaAnalyzer
+from api.prediction_service import PredictionService, SUPPORTED_MODELS
+from api.explainability import ExplainabilityService
+from api.evaluation_service import EvaluationService
+from api.feature_processor import ALL_FEATURES
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("sqam_api")
 
 app = FastAPI(
     title="SQAM Analytics Engine API",
-    description="AI-Based Software Quality Prediction using Real Java Metrics and Git Evolution History"
+    description="AI-Based Software Quality Prediction using Real Java Metrics and Git Evolution History",
+    version="2.0.0"
 )
 
 app.add_middleware(
@@ -49,6 +61,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Core prediction and explanation services for CodeQuality AI dashboard
+prediction_service = PredictionService()
+explainability_service = ExplainabilityService()
+evaluation_service = EvaluationService()
+
+# In-memory storage for asynchronous background scan tasks
+SCAN_TASKS: Dict[str, Dict[str, Any]] = {}
 
 
 class ComponentMetrics(BaseModel):
@@ -73,6 +93,35 @@ class ComponentMetrics(BaseModel):
 
 class RepoUrl(BaseModel):
     url: str
+
+
+class RepoScanRequest(BaseModel):
+    url: str = Field(..., description="Public GitHub repository URL")
+    model_name: Optional[str] = Field("LogisticRegression_combined", description="ML model configuration")
+    threshold: Optional[float] = Field(0.5, ge=0.0, le=1.0, description="Risk threshold (default 0.5)")
+
+
+class ComponentInput(BaseModel):
+    # Static Metrics
+    WMC: float = 10.0
+    DIT: float = 2.0
+    NOC: float = 0.0
+    CBO: float = 5.0
+    RFC: float = 15.0
+    LCOM5: float = 0.5
+    NPA: float = 0.0
+    NPM: float = 5.0
+    NLE: float = 1.0
+    CBOI: float = 2.0
+    CD: float = 0.1
+    LOC: float = 150.0
+    # Evolution Metrics
+    code_churn: float = 100.0
+    revision_count: float = 10.0
+    developer_count: float = 2.0
+    # Optional config
+    model_name: Optional[str] = "LogisticRegression_combined"
+    threshold: Optional[float] = 0.5
 
 
 def _load_model_and_scaler(model_name: str = "LogisticRegression_combined.pkl"):
@@ -182,10 +231,16 @@ def _rank_scan_results(results: List[Dict[str, Any]]) -> tuple[List[Dict[str, An
     return valid_results, failures
 
 
+# -----------------------------------------------------------------------------
+# Base SQAM Endpoints (Full parity with tests/test_api.py and benchmarks)
+# -----------------------------------------------------------------------------
+
 @app.get("/")
 def read_root():
     return {
         "message": "Welcome to SQAM Analytics Engine API",
+        "project": "CodeQuality AI",
+        "description": "AI-Based Software Quality Prediction Using GitHub Evolution Metrics",
         "supported_features": FEATURE_COLUMNS,
         "feature_count": len(FEATURE_COLUMNS),
         "status": "online"
@@ -269,6 +324,10 @@ def get_feature_importance():
         "logistic_regression_combined_feature_coefficients.csv",
     )
     if not os.path.exists(importance_path):
+        # Fallback to feature_importance.csv
+        alt_path = os.path.join(project_root, "data/results", "feature_importance.csv")
+        if os.path.exists(alt_path):
+            return pd.read_csv(alt_path).to_dict(orient="records")
         raise HTTPException(status_code=404, detail="Feature importance not found. Run explainability first.")
     df = pd.read_csv(importance_path)
     return df.to_dict(orient="records")
@@ -403,14 +462,12 @@ def scan_repository(
                 "file": row["file"],
                 "class_name": row["class_name"],
                 "class_identity": row["class_identity"],
-                # Backward-compatible fields expected by existing frontend UI
                 "loc": int(row["LOC"]),
                 "churn": int(row["code_churn"]),
                 "revisions": int(row["revision_count"]),
                 "risk_probability": prob,
                 "model_score": prob,
                 "risk_level": pred_level,
-                # Full 15 extracted metrics for transparency and debugging
                 "metrics": {
                     col: float(row[col]) for col in FEATURE_COLUMNS
                 }
@@ -469,5 +526,397 @@ def scan_repository(
         logger.error(f"Unexpected error scanning repository: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
     finally:
-        # Clean up cloned repository
         shutil.rmtree(temp_dir, ignore_errors=True)
+
+
+# -----------------------------------------------------------------------------
+# CodeQuality AI Interactive Dashboard REST Endpoints
+# -----------------------------------------------------------------------------
+
+@app.get("/api/sample-repos")
+def get_sample_repositories():
+    """Returns curated public Java repositories for instant testing."""
+    return [
+        {
+            "name": "google/gson",
+            "url": "https://github.com/google/gson",
+            "description": "A Java serialization/deserialization library to convert Java Objects into JSON and back.",
+            "stars": "23.5k",
+            "size": "Medium (~150 Java files)"
+        },
+        {
+            "name": "junit-team/junit4",
+            "url": "https://github.com/junit-team/junit4",
+            "description": "A programmer-oriented testing framework for Java.",
+            "stars": "8.8k",
+            "size": "Medium (~280 Java files)"
+        },
+        {
+            "name": "apache/commons-lang",
+            "url": "https://github.com/apache/commons-lang",
+            "description": "Apache Commons Lang, a package of Java utility classes for the java.lang hierarchy.",
+            "stars": "2.8k",
+            "size": "Medium (~350 Java files)"
+        },
+        {
+            "name": "square/retrofit",
+            "url": "https://github.com/square/retrofit",
+            "description": "A type-safe HTTP client for Android and the JVM.",
+            "stars": "43k",
+            "size": "Medium (~180 Java files)"
+        }
+    ]
+
+
+@app.post("/api/validate-repo")
+def validate_repository(repo: RepoScanRequest):
+    """Validates GitHub URL format and accessibility."""
+    result = GitHubService.check_repo_accessible(repo.url)
+    return result
+
+
+def _run_scan_worker(task_id: str, repo_url: str, model_name: str, threshold: float):
+    task = SCAN_TASKS[task_id]
+    clone_dir = None
+
+    def update_progress(message: str, prog: float):
+        task["message"] = message
+        task["progress"] = min(0.98, prog)
+        task["logs"].append(f"[{time.strftime('%H:%M:%S')}] {message}")
+
+    try:
+        update_progress("Validating repository URL and checking accessibility...", 0.05)
+        validation = GitHubService.check_repo_accessible(repo_url)
+        if not validation["valid"]:
+            raise ValueError(validation.get("error", "Repository inaccessible."))
+
+        update_progress(f"Cloning '{validation['owner']}/{validation['repo']}' and reading Git history...", 0.12)
+        clone_result = GitHubService.clone_repository(repo_url)
+        clone_dir = clone_result["repo_dir"]
+        task["repo_info"] = {
+            "name": clone_result["repo_name"],
+            "owner": clone_result["owner"],
+            "url": clone_result["url"],
+            "total_commits": clone_result.get("total_commits", 0),
+            "latest_commit": clone_result.get("latest_commit_hash"),
+            "latest_commit_date": clone_result.get("latest_commit_date")
+        }
+
+        # Run static analysis and Git mining
+        analysis_result = JavaAnalyzer.analyze_repository(
+            repo_dir=clone_dir,
+            progress_callback=update_progress
+        )
+
+        files = analysis_result["files"]
+        if not files:
+            raise ValueError("No Java (.java) source files were found in this repository.")
+
+        update_progress(f"Applying Machine Learning model ({model_name}) and scoring defect risks...", 0.92)
+        task["raw_files"] = files
+        task["repo_summary"] = analysis_result["summary"]
+
+        prediction_result = prediction_service.predict_repository_files(
+            file_records=files,
+            model_name=model_name,
+            threshold=threshold
+        )
+
+        task["prediction_result"] = prediction_result
+        task["status"] = "completed"
+        task["progress"] = 1.0
+        update_progress(
+            f"Analysis complete! Evaluated {len(files)} Java files. Found {prediction_result['summary']['high_risk_count']} high-risk files.",
+            1.0
+        )
+
+    except Exception as e:
+        task["status"] = "failed"
+        task["error"] = str(e)
+        update_progress(f"Scan failed: {str(e)}", task["progress"])
+    finally:
+        if clone_dir:
+            GitHubService.cleanup(clone_dir)
+
+
+@app.post("/api/scan-repo")
+def start_repository_scan(request: RepoScanRequest, background_tasks: BackgroundTasks):
+    """Initiates an asynchronous background scanning task with progress polling."""
+    val = GitHubService.validate_url(request.url)
+    if not val["valid"]:
+        raise HTTPException(status_code=400, detail=val["error"])
+
+    task_id = str(uuid.uuid4())
+    SCAN_TASKS[task_id] = {
+        "task_id": task_id,
+        "status": "running",
+        "progress": 0.02,
+        "message": "Initializing scan task...",
+        "logs": [f"[{time.strftime('%H:%M:%S')}] Scan initiated for {val['normalized_url']}"],
+        "repo_url": val["normalized_url"],
+        "model_name": request.model_name or "LogisticRegression_combined",
+        "threshold": request.threshold or 0.5,
+        "repo_info": None,
+        "raw_files": [],
+        "repo_summary": None,
+        "prediction_result": None,
+        "error": None,
+        "created_at": time.time()
+    }
+
+    background_tasks.add_task(
+        _run_scan_worker,
+        task_id=task_id,
+        repo_url=val["normalized_url"],
+        model_name=request.model_name or "LogisticRegression_combined",
+        threshold=request.threshold or 0.5
+    )
+
+    return {
+        "task_id": task_id,
+        "status": "running",
+        "message": "Scan started successfully.",
+        "repo_url": val["normalized_url"]
+    }
+
+
+@app.get("/api/scan-status/{task_id}")
+def get_scan_status(task_id: str):
+    task = SCAN_TASKS.get(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Scan task not found.")
+
+    return {
+        "task_id": task["task_id"],
+        "status": task["status"],
+        "progress": round(task["progress"], 2),
+        "message": task["message"],
+        "logs": task["logs"],
+        "error": task.get("error"),
+        "repo_info": task.get("repo_info")
+    }
+
+
+@app.get("/api/scan-results/{task_id}")
+def get_scan_results(
+    task_id: str,
+    model: Optional[str] = Query(None, description="Re-evaluate with specified model"),
+    threshold: Optional[float] = Query(None, ge=0.0, le=1.0, description="Re-evaluate with specified threshold")
+):
+    task = SCAN_TASKS.get(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Scan task not found.")
+
+    if task["status"] == "running":
+        return {
+            "status": "running",
+            "progress": task["progress"],
+            "message": task["message"]
+        }
+
+    if task["status"] == "failed":
+        raise HTTPException(status_code=400, detail=task.get("error", "Scan failed."))
+
+    raw_files = task.get("raw_files", [])
+    if not raw_files:
+        raise HTTPException(status_code=404, detail="No analyzed files found in task.")
+
+    active_model = model or task["model_name"]
+    active_threshold = threshold if threshold is not None else task["threshold"]
+
+    if (active_model != task["model_name"]) or (threshold is not None and threshold != task["threshold"]):
+        prediction_result = prediction_service.predict_repository_files(
+            file_records=raw_files,
+            model_name=active_model,
+            threshold=active_threshold
+        )
+    else:
+        prediction_result = task.get("prediction_result")
+        if not prediction_result:
+            prediction_result = prediction_service.predict_repository_files(
+                file_records=raw_files,
+                model_name=active_model,
+                threshold=active_threshold
+            )
+
+    return {
+        "status": "completed",
+        "task_id": task_id,
+        "repo_info": task.get("repo_info"),
+        "repo_summary": task.get("repo_summary"),
+        "summary": prediction_result["summary"],
+        "distribution": prediction_result["distribution"],
+        "files": prediction_result["files"],
+        "available_models": prediction_service.get_available_models()
+    }
+
+
+@app.get("/api/file-detail/{task_id}")
+def get_file_detail(
+    task_id: str,
+    file_path: str = Query(..., description="Relative path of Java file"),
+    model: Optional[str] = Query("LogisticRegression_combined")
+):
+    task = SCAN_TASKS.get(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Scan task not found.")
+
+    raw_files = task.get("raw_files", [])
+    matching_file = next((f for f in raw_files if f["file_path"] == file_path), None)
+    if not matching_file:
+        raise HTTPException(status_code=404, detail=f"File '{file_path}' not found in scan results.")
+
+    explanation = explainability_service.explain_file_prediction(
+        file_metrics=matching_file,
+        model_name=model or "LogisticRegression_combined"
+    )
+
+    avg_metrics = {}
+    if raw_files:
+        for feat in ALL_FEATURES:
+            avg_metrics[feat] = round(float(np.mean([f.get(feat, 0) for f in raw_files])), 2)
+
+    comparison_radar = [
+        {"metric": "LOC", "file": matching_file.get("LOC", 0), "repo_avg": avg_metrics.get("LOC", 0)},
+        {"metric": "WMC", "file": matching_file.get("WMC", 0), "repo_avg": avg_metrics.get("WMC", 0)},
+        {"metric": "CBO", "file": matching_file.get("CBO", 0), "repo_avg": avg_metrics.get("CBO", 0)},
+        {"metric": "RFC", "file": matching_file.get("RFC", 0), "repo_avg": avg_metrics.get("RFC", 0)},
+        {"metric": "NLE", "file": matching_file.get("NLE", 0), "repo_avg": avg_metrics.get("NLE", 0)},
+        {"metric": "Churn", "file": matching_file.get("code_churn", 0), "repo_avg": avg_metrics.get("code_churn", 0)},
+        {"metric": "Revisions", "file": matching_file.get("revision_count", 0), "repo_avg": avg_metrics.get("revision_count", 0)},
+    ]
+
+    return {
+        "file_path": matching_file["file_path"],
+        "file_name": matching_file["file_name"],
+        "class_name": matching_file.get("class_name", ""),
+        "metrics": {feat: matching_file.get(feat, 0) for feat in ALL_FEATURES},
+        "repo_averages": avg_metrics,
+        "radar_comparison": comparison_radar,
+        "explanation": explanation
+    }
+
+
+@app.post("/api/predict-component")
+def predict_single_component(input_data: ComponentInput):
+    record = {
+        "file_path": "SimulatedComponent.java",
+        "file_name": "SimulatedComponent.java",
+        "class_name": "SimulatedComponent",
+        "WMC": input_data.WMC,
+        "DIT": input_data.DIT,
+        "NOC": input_data.NOC,
+        "CBO": input_data.CBO,
+        "RFC": input_data.RFC,
+        "LCOM5": input_data.LCOM5,
+        "NPA": input_data.NPA,
+        "NPM": input_data.NPM,
+        "NLE": input_data.NLE,
+        "CBOI": input_data.CBOI,
+        "CD": input_data.CD,
+        "LOC": input_data.LOC,
+        "code_churn": input_data.code_churn,
+        "revision_count": input_data.revision_count,
+        "developer_count": input_data.developer_count,
+    }
+
+    pred_res = prediction_service.predict_repository_files(
+        file_records=[record],
+        model_name=input_data.model_name or "LogisticRegression_combined",
+        threshold=input_data.threshold or 0.5
+    )
+
+    explanation = explainability_service.explain_file_prediction(
+        file_metrics=record,
+        model_name=input_data.model_name or "LogisticRegression_combined"
+    )
+
+    file_result = pred_res["files"][0]
+
+    return {
+        "prediction": file_result,
+        "explanation": explanation
+    }
+
+
+@app.get("/api/model-evaluation")
+def get_model_evaluations():
+    benchmarks = evaluation_service.get_research_benchmarks()
+    pipeline_eval = evaluation_service.get_pipeline_evaluation()
+    global_importance = explainability_service.get_global_feature_importance()
+
+    return {
+        "research_benchmarks": benchmarks,
+        "pipeline_evaluation": pipeline_eval,
+        "feature_importance": global_importance,
+        "models_available": prediction_service.get_available_models()
+    }
+
+
+@app.get("/api/export-csv/{task_id}")
+def export_results_csv(
+    task_id: str,
+    model: Optional[str] = Query(None),
+    threshold: Optional[float] = Query(None)
+):
+    task = SCAN_TASKS.get(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Scan task not found.")
+
+    raw_files = task.get("raw_files", [])
+    if not raw_files:
+        raise HTTPException(status_code=400, detail="No files available for export.")
+
+    active_model = model or task["model_name"]
+    active_thresh = threshold if threshold is not None else task["threshold"]
+
+    pred_res = prediction_service.predict_repository_files(
+        file_records=raw_files,
+        model_name=active_model,
+        threshold=active_thresh
+    )
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    headers = [
+        "File Path", "File Name", "Defect Risk Score", "Risk Level",
+        "WMC", "DIT", "NOC", "CBO", "RFC", "LCOM5",
+        "NPA", "NPM", "NLE", "CBOI", "CD", "LOC",
+        "Code Churn", "Revision Count", "Developer Count", "Model Used"
+    ]
+    writer.writerow(headers)
+
+    for f in pred_res["files"]:
+        writer.writerow([
+            f["file_path"],
+            f["file_name"],
+            f["risk_score"],
+            f["risk_level"],
+            f["WMC"],
+            f["DIT"],
+            f["NOC"],
+            f["CBO"],
+            f["RFC"],
+            f["LCOM5"],
+            f["NPA"],
+            f["NPM"],
+            f["NLE"],
+            f["CBOI"],
+            f["CD"],
+            f["LOC"],
+            f["code_churn"],
+            f["revision_count"],
+            f["developer_count"],
+            f["model_used"]
+        ])
+
+    output.seek(0)
+    repo_name = task.get("repo_info", {}).get("name", "repository")
+    filename = f"CodeQualityAI_{repo_name}_risk_report.csv"
+
+    return StreamingResponse(
+        iter([output.getvalue()]),
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename={filename}"}
+    )

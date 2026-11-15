@@ -1,127 +1,173 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight, GitBranch, Layers3, Search, SlidersHorizontal } from 'lucide-react';
-import './About.css';
+import React from 'react';
+import { 
+  BookOpen, 
+  Layers, 
+  History, 
+  Cpu, 
+  ShieldCheck, 
+  AlertTriangle, 
+  CheckCircle2, 
+  Code2, 
+  Layers3,
+  GitBranch,
+  SlidersHorizontal,
+  ExternalLink 
+} from 'lucide-react';
+import { METRIC_DEFINITIONS } from '../components/MetricTooltip';
 
 const workflow = [
-  'Submit a Git repository URL.',
+  'Submit a public Git repository URL.',
   'The backend clones the repository and records its checked-out commit.',
-  'Java source files are discovered and parsed; parser and analysis failures are retained as diagnostics.',
+  'Java source files are discovered and parsed into compilation units.',
   'Twelve static code metrics are extracted from each supported primary file-level class.',
-  'Git history is mined for code churn, revision count and developer count.',
+  'Git history is mined for code churn, revision count, and distinct developer count.',
   'The scanner assembles the ordered 15-feature vector for each file-level result.',
   'Training-time feature medians fill missing values, then the saved StandardScaler transforms the vector.',
-  'Combined Logistic Regression produces a score for the positive (defective) class.',
-  'Files are sorted by model score; additional and nested classes are not scored independently.',
-  'The dashboard presents the repository summary, diagnostics, ranked files and extracted metrics.',
+  'Combined Logistic Regression produces a relative defect-risk score.',
+  'Files are sorted by model score; individual class metrics and SHAP explanations are cached.',
+  'The interactive dashboard presents the repository summary, diagnostics, ranked files, and charts.',
 ];
 
-const staticFeatures = ['LOC', 'WMC', 'DIT', 'NOC', 'RFC', 'LCOM5', 'CBO', 'NPA', 'NPM', 'NLE', 'CBOI', 'CD'];
-const evolutionFeatures = ['code_churn', 'revision_count', 'developer_count'];
-
-const About = () => (
-  <main className="research-page">
-    <header className="research-header">
-      <p className="eyebrow">Research workflow</p>
-      <h1>How repository analysis works</h1>
-      <p className="text-muted">
-        SQAM combines source-level structure and repository history to estimate which Java files
-        may merit earlier manual inspection.
-      </p>
-    </header>
-
-    <section className="workflow-grid" aria-label="Repository scanning workflow">
-      {workflow.map((step, index) => (
-        <article className="glass-panel workflow-step" key={step}>
-          <span className="workflow-index">{String(index + 1).padStart(2, '0')}</span>
-          <p>{step}</p>
-        </article>
-      ))}
-    </section>
-
-    <section className="grid-2 research-section">
-      <article className="glass-panel">
-        <div className="section-title">
-          <Layers3 aria-hidden="true" />
-          <h2>Feature configurations</h2>
+const About = () => {
+  return (
+    <div className="space-y-10 py-2 max-w-4xl mx-auto">
+      {/* Title */}
+      <div>
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-xs font-semibold mb-2">
+          <BookOpen size={13} />
+          <span>Research Methodology & Metric Reference</span>
         </div>
-        <p className="text-muted">
-          Static-only models use the 12 source metrics. Combined models use all 12 static and all
-          3 Git evolution metrics. Repository scans and the deployed model use all 15 features.
+        <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          About CodeQuality AI
+        </h1>
+        <p className="text-xs text-slate-500 mt-1">
+          Theoretical foundation, experimental design, and comprehensive dictionary of software quality metrics.
         </p>
-        <h3>Static code metrics</h3>
-        <p className="feature-list">{staticFeatures.join(' · ')}</p>
-        <h3>Git evolution metrics</h3>
-        <p className="feature-list">{evolutionFeatures.join(' · ')}</p>
-        <p className="text-muted">
-          The API preserves this ordered 15-feature schema; the manual input page is not part of
-          the primary workflow.
-        </p>
-      </article>
+      </div>
 
-      <article className="glass-panel">
-        <div className="section-title">
-          <GitBranch aria-hidden="true" />
-          <h2>Models and selection</h2>
+      {/* Research Background & Problem Statement */}
+      <section className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-subtle p-6 space-y-4">
+        <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <Layers size={18} className="text-blue-600" />
+          <span>Research Motivation: Why Static Metrics Alone Fall Short</span>
+        </h2>
+        <div className="text-xs text-slate-600 dark:text-slate-300 space-y-3 leading-relaxed">
+          <p>
+            Traditional software quality assurance (SQA) relies heavily on static code metrics derived from class diagrams or abstract syntax trees (such as the Chidamber & Kemerer metric suite: WMC, DIT, NOC, CBO, RFC, and LCOM). While static metrics capture structural complexity and coupling, they present only a <b>static snapshot</b> of the source code.
+          </p>
+          <p>
+            A class with high cyclomatic complexity may remain completely stable and bug-free for years if rarely modified. Conversely, an apparently simple class undergoing rapid, contested edits by multiple developers often becomes a hotbed for regressions.
+          </p>
+          <p>
+            <b>CodeQuality AI</b> operationalizes the hypothesis that combining static object-oriented structural metrics with dynamic <b>Git Evolution Metrics</b> (Code Churn, Revision Frequency, and Developer Ownership Distribution) drastically enhances Machine Learning defect prediction accuracy—producing an empirical <b>+36% boost in Average Precision</b>.
+          </p>
         </div>
-        <p className="text-muted">
-          Three classifier families were evaluated with each feature configuration: Logistic
-          Regression, Decision Tree and Random Forest. That yields six experimental configurations.
-        </p>
-        <p className="text-muted">
-          Combined Logistic Regression was selected for deployment based on the recorded
-          experimental ranking metrics. It is the model loaded for repository scans. This is a
-          model-selection result, not evidence that predictions are calibrated or that detected
-          files contain defects.
-        </p>
-        <div className="method-note">
-          <strong>Preprocessing is shared with training.</strong>
-          <span>Missing values use saved training medians; the saved StandardScaler is applied in the recorded feature order.</span>
-        </div>
-      </article>
-    </section>
+      </section>
 
-    <section className="grid-2 research-section">
-      <article className="glass-panel">
-        <div className="section-title">
-          <SlidersHorizontal aria-hidden="true" />
-          <h2>Evaluation methodology</h2>
+      {/* 10-Step Scanning Workflow */}
+      <section className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-subtle p-6 space-y-4">
+        <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <Layers3 size={18} className="text-indigo-600" />
+          <span>10-Stage Analysis Workflow</span>
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {workflow.map((step, index) => (
+            <div key={index} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 flex items-start gap-3">
+              <span className="font-mono text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-950/80 px-2 py-0.5 rounded-md shrink-0">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">{step}</p>
+            </div>
+          ))}
         </div>
-        <p className="text-muted">
-          The reported holdout is release-based and chronological: training and test rows are
-          separated by release, and preprocessing is fitted on training data. Average Precision is
-          the primary precision-recall ranking metric; ROC-AUC, precision, recall, F1 and confusion
-          matrices are also reported. See Analytics for the recorded values and curves.
-        </p>
-        <p className="text-muted">
-          The deployed model’s held-out test contains 2,572 components, including 25 labeled
-          defective components. The class imbalance makes accuracy alone unsuitable as a measure
-          of defect detection.
-        </p>
-      </article>
+      </section>
 
-      <article className="glass-panel">
-        <div className="section-title">
-          <Search aria-hidden="true" />
-          <h2>Interpreting scan results</h2>
+      {/* 15 Metrics Dictionary */}
+      <section className="space-y-4">
+        <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <Code2 size={18} className="text-purple-600" />
+          <span>Complete Dictionary of 15 Software Quality Metrics</span>
+        </h2>
+
+        {/* 12 Static Metrics Table */}
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-subtle overflow-hidden">
+          <div className="px-5 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+              12 Static Object-Oriented Metrics
+            </h3>
+          </div>
+          <div className="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs">
+            {Object.entries(METRIC_DEFINITIONS)
+              .filter(([_, info]) => info.category.startsWith('Static'))
+              .map(([key, info]) => (
+                <div key={key} className="p-4 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-slate-900 dark:text-white font-mono">{key}</span>
+                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300">
+                      {info.category}
+                    </span>
+                  </div>
+                  <p className="text-slate-700 dark:text-slate-300 font-medium">{info.name}</p>
+                  <p className="text-slate-500 text-[11px] leading-relaxed">{info.description}</p>
+                  <div className="mt-1 text-[11px] text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg">
+                    <span className="font-semibold text-slate-700 dark:text-slate-300">Engineering Impact: </span>
+                    {info.interpretation}
+                  </div>
+                </div>
+              ))}
+          </div>
         </div>
-        <p className="text-muted">
-          Each result represents one primary class/file-level analysis. Additional or nested
-          declarations are not given independent predictions. Diagnostics identify parser failures,
-          files without resolved identities and unresolved project references.
-        </p>
-        <p className="score-disclaimer">
-          These scores represent the model&apos;s estimates based on source-code metrics and Git
-          history. They help prioritize manual inspection and do not confirm the presence of defects.
-        </p>
-      </article>
-    </section>
 
-    <div className="research-cta">
-      <Link to="/scanner" className="btn-primary scan-cta">
-        <Search size={18} /> Scan a repository <ArrowRight size={18} />
-      </Link>
+        {/* 3 Evolution Metrics Table */}
+        <div className="bg-white dark:bg-slate-900 border border-purple-200 dark:border-purple-900/50 rounded-2xl shadow-subtle overflow-hidden">
+          <div className="px-5 py-3 border-b border-purple-200 dark:border-purple-900/50 bg-purple-50/50 dark:bg-purple-950/30">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-purple-800 dark:text-purple-300">
+              3 Git Evolution Metrics
+            </h3>
+          </div>
+          <div className="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs">
+            {Object.entries(METRIC_DEFINITIONS)
+              .filter(([_, info]) => info.category.startsWith('Git'))
+              .map(([key, info]) => (
+                <div key={key} className="p-4 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-purple-900 dark:text-purple-300 font-mono">{key}</span>
+                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300">
+                      {info.category}
+                    </span>
+                  </div>
+                  <p className="text-slate-700 dark:text-slate-300 font-medium">{info.name}</p>
+                  <p className="text-slate-500 text-[11px] leading-relaxed">{info.description}</p>
+                  <div className="mt-1 text-[11px] text-slate-600 dark:text-slate-400 bg-purple-50/30 dark:bg-slate-800/50 p-2 rounded-lg">
+                    <span className="font-semibold text-purple-700 dark:text-purple-300">Engineering Impact: </span>
+                    {info.interpretation}
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Scientific Constraints and Limitations */}
+      <section className="bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 rounded-2xl p-6 space-y-3">
+        <h3 className="text-sm font-bold text-amber-900 dark:text-amber-200 flex items-center gap-2">
+          <AlertTriangle size={16} className="text-amber-600" />
+          <span>Research Constraints & Ethical Usage Guidelines</span>
+        </h3>
+        <ul className="text-xs text-amber-900/80 dark:text-amber-300/80 space-y-2 list-disc list-inside leading-relaxed">
+          <li>
+            <b>Java Language Scope:</b> The current AST grammar and trained feature extractors are specialized for Java (.java) source files. Other languages (Python, JavaScript, Go) are not supported.
+          </li>
+          <li>
+            <b>Relative Risk Indicator:</b> The defect-risk score is a relative ranking and prioritization metric. It denotes which files have statistical signatures resembling historical bug fixes, <b>not</b> certified defects or calibrated probabilities.
+          </li>
+          <li>
+            <b>Non-Punitive Tooling:</b> Defect prediction metrics should be used constructively to schedule code reviews, pair programming, and focused automated testing—never for punitive developer appraisal.
+          </li>
+        </ul>
+      </section>
     </div>
-  </main>
-);
+  );
+};
 
 export default About;

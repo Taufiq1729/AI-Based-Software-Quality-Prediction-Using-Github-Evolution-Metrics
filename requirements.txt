@@ -14,5 +14,3 @@ uvicorn
 pydantic
 lizard
 GitPython
-javalang
-httpx
